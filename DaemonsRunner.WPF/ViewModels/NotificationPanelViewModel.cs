@@ -4,6 +4,7 @@ using DaemonsRunner.ViewModels.Base;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows.Input;
 
 namespace DaemonsRunner.ViewModels
@@ -26,7 +27,10 @@ namespace DaemonsRunner.ViewModels
 
         #region --Constructors--
 
-        public NotificationPanelViewModel() { }
+        public NotificationPanelViewModel() 
+        {
+            _notifications = new ObservableCollection<string>(Enumerable.Range(0, 10).Select(x => new string('x', new Random().Next(0, 15))));
+        }
 
         public NotificationPanelViewModel(IDataBus dataBus)
         {

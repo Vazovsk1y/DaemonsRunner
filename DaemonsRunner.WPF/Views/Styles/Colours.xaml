@@ -13,5 +13,11 @@
 
     <SolidColorBrush x:Key="BaseNONActiveElementsBrush">#FFE3E3</SolidColorBrush>
     <Color x:Key="BaseNONActiveElementsColor">#FFE3E3</Color>
-    
+
+    <SolidColorBrush x:Key="TextInsideBlocksBrush">#AF0808</SolidColorBrush>
+    <Color x:Key="TextInsideBlocksColor">#FFE3E3</Color>
+
+    <SolidColorBrush x:Key="CloseButtonBrush">#FF7474</SolidColorBrush>
+    <Color x:Key="CloseButtonColor">#FFE3E3</Color>
+
 </ResourceDictionary>

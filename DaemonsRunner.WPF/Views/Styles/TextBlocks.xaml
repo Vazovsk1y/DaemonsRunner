@@ -11,6 +11,11 @@
         <Setter Property="FontFamily" Value="\Views\Fonts\Montserrat-VariableFont_wght.ttf#Montserrat"/>
     </Style>
 
+    <Style x:Key="BaseNotificationsTextBlocks" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="{StaticResource NotificationsFontSize}"/>
+        <Setter Property="FontFamily" Value="\Views\Fonts\Montserrat-VariableFont_wght.ttf#Montserrat"/>
+    </Style>
+
     <!--How to include fonts correct, path string like that-->
     <!--<Setter Property="FontFamily" Value="\Views\Fonts\{*optional* FONT_FILE.NAME.ttf/otf}#FONT_NAME"/>-->
     <!--Set font file properties 

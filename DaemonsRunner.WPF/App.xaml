@@ -12,6 +12,7 @@
 
                 <ResourceDictionary Source="Views\Styles\TextBlocks.xaml"/>
                 <ResourceDictionary Source="Views\Styles\Buttons.xaml"/>
+                <ResourceDictionary Source="\Views\Styles\Shared.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

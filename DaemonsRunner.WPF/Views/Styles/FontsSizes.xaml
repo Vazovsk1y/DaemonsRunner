@@ -4,5 +4,6 @@
 
     <system:Double x:Key="BaseTitlesFontSize">22</system:Double>
     <system:Double x:Key="BaseElementsFontSize">16</system:Double>
+    <system:Double x:Key="NotificationsFontSize">13</system:Double>
 
 </ResourceDictionary>

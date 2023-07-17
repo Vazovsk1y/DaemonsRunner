@@ -5,9 +5,32 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:DaemonsRunner.Views.Controls" 
              xmlns:viewmodels="clr-namespace:DaemonsRunner.ViewModels" 
-             d:DataContext="{d:DesignInstance Type=viewmodels:NotificationPanelViewModel}"
+             d:DataContext="{d:DesignInstance Type=viewmodels:NotificationPanelViewModel, IsDesignTimeCreatable=True}"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="400">
+
+    <UserControl.Resources>
+        <Style TargetType="ListBoxItem">
+            <Setter Property="Background" Value="{StaticResource BaseBlocksBackgroundBrush}"/>
+            <Setter Property="Margin" Value="5, 3, 8, 3"/>
+            <Setter Property="MinHeight" Value="30"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="BorderBrush" Value="{StaticResource CloseButtonBrush}"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ListBoxItem">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="{StaticResource ListBoxItemsContainersRoundingAngle}">
+                            <ContentPresenter />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+    
     <Grid Background="{StaticResource BaseBlocksBackgroundBrush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="9*"/>
@@ -17,23 +40,38 @@
         <DockPanel Grid.Row="0">
             <TextBlock DockPanel.Dock="Top"
                        Margin="10,5"
-                Text="Уведомления" Style="{StaticResource BaseTitlesTextBlocks}"/>
+                       Text="Уведомления" 
+                       Style="{StaticResource BaseTitlesTextBlocks}"/>
 
-            <ListBox DockPanel.Dock="Top" 
-                 BorderThickness="0"
-            ItemsSource="{Binding Notifications}">
+            <ListBox DockPanel.Dock="Top"
+                     ItemsSource="{Binding Notifications}">
+
+                <ListBox.Style>
+                    <Style TargetType="ListBox" BasedOn="{StaticResource BaseListBox}"/>
+                </ListBox.Style>
+
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding}" 
+                                   Padding="5"
+                                   Style="{StaticResource BaseNotificationsTextBlocks}"
+                                   Foreground="{StaticResource BaseFontBrush}"/>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
             </ListBox>
         </DockPanel>
 
         <Button Grid.Row="1"
-                    MinHeight="40"
-                Margin="5"
                 Command="{Binding ClearNotificationsCommand}"
-                    Style="{StaticResource BaseRoundedButton}"
-                    Background="{StaticResource BaseNONActiveElementsBrush}">
-            <TextBlock Text="Очистить уведомления" 
-                           Style="{StaticResource BaseElementsTextBlocks}"
-                           Foreground="{StaticResource BaseFontBrush}"/>
+                MinHeight="40"
+                Margin="5"
+                Style="{StaticResource BaseRoundedButton}"
+                Background="{StaticResource BaseNONActiveElementsBrush}">
+            
+            <TextBlock Text="Очистить уведомления"
+                       Style="{StaticResource BaseElementsTextBlocks}"
+                       Foreground="{StaticResource BaseFontBrush}"/>
         </Button>
     </Grid>
+    
 </UserControl>

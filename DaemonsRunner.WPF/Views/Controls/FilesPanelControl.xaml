@@ -11,6 +11,7 @@
              d:DesignHeight="450" d:DesignWidth="400"
              >
     <UserControl.Resources>
+        
         <Style TargetType="ListBoxItem">
             <Setter Property="Background" Value="{StaticResource BaseNONActiveElementsBrush}"/>
             <Setter Property="Margin" Value="5, 3, 8, 3"/>
@@ -28,71 +29,81 @@
                 </Setter.Value>
             </Setter>
         </Style>
+        
     </UserControl.Resources>
 
     <DockPanel Background="{StaticResource BaseBlocksBackgroundBrush}">
+        
         <Grid DockPanel.Dock="Top" 
-                  Margin="3">
+              Margin="3">
 
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="auto"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <TextBlock Style="{StaticResource BaseTitlesTextBlocks}"
-                           Text="PHP Files" 
-                           Margin="10,5"
-                           Grid.Column="0"
-                           HorizontalAlignment="Left" 
-                           VerticalAlignment="Center"/>
+            <TextBlock Text="PHP Files"
+                       Style="{StaticResource BaseTitlesTextBlocks}"
+                       Margin="10,5"
+                       Grid.Column="0"
+                       HorizontalAlignment="Left" 
+                       VerticalAlignment="Center"/>
 
             <TextBlock Text="{Binding Files.Count}" 
-                           Margin="0, 5, 10, 0"
-                           Grid.Column="1"
-                           Style="{StaticResource BaseTitlesTextBlocks}"
-                           HorizontalAlignment="Right" 
-                           VerticalAlignment="Center"/>
+                       Style="{StaticResource BaseTitlesTextBlocks}"
+                       Margin="0, 5, 10, 0"
+                       Grid.Column="1"
+                       HorizontalAlignment="Right" 
+                       VerticalAlignment="Center"/>
         </Grid>
 
-        <UniformGrid DockPanel.Dock="Bottom" 
-                         Rows="1" 
-                         Margin="5" 
-                         MinHeight="50">
-            <Button  Background="{StaticResource BaseNONActiveElementsBrush}"
-                        Margin="3,0"
-                        Style="{StaticResource BaseRoundedButton}"
-                        Command="{Binding AddFileToListCommand}">
-                <TextBlock Text="Добавить" 
-                               Style="{StaticResource BaseElementsTextBlocks}"/>
-            </Button>
-            <Button Background="{StaticResource  BaseNONActiveElementsBrush}"
+        <UniformGrid DockPanel.Dock="Bottom"
+                     Rows="1" 
+                     Margin="5" 
+                     MinHeight="50">
+
+            <Button Command="{Binding AddFileToListCommand}"
+                Background="{StaticResource BaseNONActiveElementsBrush}"
                     Margin="3,0"
-                        Style="{StaticResource BaseRoundedButton}"
-                        Command="{Binding DeleteFileFromListCommand}"
-                        CommandParameter="{Binding ElementName=filesListBox, Path=SelectedItems}">
-                <TextBlock Text="Удалить" 
-                               Style="{StaticResource BaseElementsTextBlocks}"/>
+                    Style="{StaticResource BaseRoundedButton}">
+                
+                <TextBlock Text="Добавить" 
+                           Style="{StaticResource BaseElementsTextBlocks}"/>
             </Button>
+
+            <Button Command="{Binding DeleteFileFromListCommand}"
+                    Background="{StaticResource  BaseNONActiveElementsBrush}"
+                    Margin="3,0"
+                    Style="{StaticResource BaseRoundedButton}"
+                    CommandParameter="{Binding ElementName=filesListBox, Path=SelectedItems}">
+                <TextBlock Text="Удалить" 
+                           Style="{StaticResource BaseElementsTextBlocks}"/>
+            </Button>
+            
         </UniformGrid>
 
         <Grid DockPanel.Dock="Top">
             <Image Height="180" Width="180"
                     Source="{StaticResource PeoplesIcon}"/>
-            <ListBox 
-                     Background="Transparent"
-                     x:Name="filesListBox"
+            
+            <ListBox x:Name="filesListBox"
                      Margin="3"
                      SelectionMode="Multiple"
                      ItemsSource="{Binding Files}"
-                     BorderThickness="0">
+                     >
+                <ListBox.Style>
+                    <Style TargetType="ListBox" BasedOn="{StaticResource BaseListBox}"/>
+                </ListBox.Style>
+
                 <ListBox.ItemTemplate>
                     <DataTemplate DataType="{x:Type m:PHPFile}">
                         <TextBlock Text="{Binding Name}" 
-                                       Margin="5"
+                                   Margin="5"
                                    Style="{StaticResource BaseElementsTextBlocks}"/>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
+            
         </Grid>
     </DockPanel>
 

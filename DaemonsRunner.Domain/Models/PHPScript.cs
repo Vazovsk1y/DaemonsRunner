@@ -12,7 +12,7 @@ namespace DaemonsRunner.Domain.Models
         /// <summary>
         /// Script name.
         /// </summary>
-        public string Name => $"{ExecutableFile.Name} script";
+        public string Name => $"{ExecutableFile.Name}";
 
         /// <summary>
         /// Command to execute in command line for php-daemon starting.

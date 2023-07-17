@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Security.Cryptography.Xml;
 using System.Windows.Input;
 
 namespace DaemonsRunner.ViewModels
@@ -82,7 +83,8 @@ namespace DaemonsRunner.ViewModels
 
         public WorkSpaceViewModel() 
         {
-
+            var testScripts = Enumerable.Range(0, 10).Select(e => new PHPScript(_filesPanelViewModel.Files.FirstOrDefault())).ToList();
+            _configuredScripts = new ObservableCollection<PHPScript>(testScripts);
         }
 
         public WorkSpaceViewModel(
