@@ -11,7 +11,7 @@ public interface IFileDialog
     /// Start dialog with file system and provides you a response that contain all selected files in this dialog.
     /// </summary>
     public DataResponse<IEnumerable<FileInfo>> StartDialog(
-        string filter = "all files (*.) | *.", 
+        string filter = "", 
         string title = "Choose files:",
         bool multiselect = true);
 }

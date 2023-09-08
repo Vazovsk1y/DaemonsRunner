@@ -12,7 +12,7 @@ public class ScriptRepository : IScriptRepository
 
 	public ScriptRepository(IStorage storageDirectory)
 	{
-		_storageFilePath = Path.Combine(storageDirectory.FullPath, "executablesFiles.json");
+		_storageFilePath = Path.Combine(storageDirectory.FullPath, "scripts.json");
 	}
 
 	public void Insert(Script entity)
@@ -45,7 +45,7 @@ public class ScriptRepository : IScriptRepository
 		}
 	}
 
-	public void Remove(ScriptId scriptId)
+	public bool Remove(ScriptId scriptId)
 	{
 		lock (_locker)
 		{
@@ -54,13 +54,14 @@ public class ScriptRepository : IScriptRepository
 			var itemToRemove = currentEntities.FirstOrDefault(e => e.Id == scriptId);
 			if (itemToRemove is null)
 			{
-				return;
+				return false;
 			}
 
 			currentEntities.Remove(itemToRemove);
 			using var writer = new StreamWriter(_storageFilePath);
-			string json = JsonConvert.SerializeObject(currentEntities, Formatting.Indented);
+			string json = JsonConvert.SerializeObject(currentEntities.Select(e => e.ToJsonModel()), Formatting.Indented);
 			writer.Write(json);
+			return true;
 		}
 	}
 }

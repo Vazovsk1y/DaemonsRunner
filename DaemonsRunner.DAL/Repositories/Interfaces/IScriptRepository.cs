@@ -8,5 +8,5 @@ public interface IScriptRepository
 
 	void Insert(Script entity);
 
-	void Remove(ScriptId scriptId);
+	bool Remove(ScriptId scriptId);
 }

@@ -18,7 +18,13 @@ public class ScriptService : IScriptService
 
 	public Task<Response> DeleteAsync(ScriptId scriptId, CancellationToken cancellationToken = default)
 	{
-		_scriptRepository.Remove(scriptId);
+		var result = _scriptRepository.Remove(scriptId);
+
+		if (!result)
+		{
+			return Task.FromResult(Response.Fail("Script with passed id is not exists."));
+		}
+		
 		return Task.FromResult(Response.Success());
 	}
 
@@ -55,7 +61,7 @@ public class ScriptService : IScriptService
 		var executor = ScriptExecutor.Create(scriptToExecute);
 		if (executor.ExecutableScript?.ExecutableFile is not null && !File.Exists(executor.ExecutableScript.ExecutableFile.Path))
 		{
-			return Task.FromResult(Response.Fail<ScriptExecutor>($"Executable file {executor.ExecutableScript.ExecutableFile.Path} is not exists."));
+			return Task.FromResult(Response.Fail<ScriptExecutor>($"Executable file [{executor.ExecutableScript.ExecutableFile.Path}] is not exists."));
 		}
 
 		executor.Start();

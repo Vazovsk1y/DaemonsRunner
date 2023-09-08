@@ -9,9 +9,9 @@ public static class Mapper
     public static Script ToModel(this ScriptJsonModel model)
     {
         var scriptType = typeof(Script);
-        var ctor = scriptType.GetType().GetConstructor(BindingFlags.NonPublic | BindingFlags.Instance, null, new Type[] { typeof(ScriptId) }, null);
+        var ctor = scriptType.GetConstructor(BindingFlags.NonPublic | BindingFlags.Instance, null, new[] { typeof(ScriptId) }, null);
 
-        if (ctor is null)
+		if (ctor is null)
         {
             throw new InvalidOperationException("Unable to find suitable private ctor for creating script.");
         }
