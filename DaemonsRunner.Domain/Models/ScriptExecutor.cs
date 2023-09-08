@@ -42,7 +42,16 @@ public class ScriptExecutor : IDisposable
         }
     }
 
-    public bool IsRunning
+	public string Title
+	{
+		get
+		{
+			ThrownExceptionIfDisposed();
+			return $"{_executableScript.Title} runner.";
+		}
+	}
+
+	public bool IsRunning
     {
         get
         {
