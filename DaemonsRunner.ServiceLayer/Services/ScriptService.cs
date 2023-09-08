@@ -10,9 +10,9 @@ namespace DaemonsRunner.BuisnessLayer.Services;
 
 public class ScriptService : IScriptService
 {
-	private readonly IRepository<Script> _scriptRepository;
+	private readonly IScriptRepository _scriptRepository;
 
-	public ScriptService(IRepository<Script> scriptRepository)
+	public ScriptService(IScriptRepository scriptRepository)
 	{
 		_scriptRepository = scriptRepository;
 	}

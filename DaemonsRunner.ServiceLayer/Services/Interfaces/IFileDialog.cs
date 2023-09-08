@@ -13,6 +13,5 @@ public interface IFileDialog
     public DataResponse<IEnumerable<FileInfo>> StartDialog(
         string filter = "all files (*.) | *.", 
         string title = "Choose files:",
-        bool multiselect = true,
-        CancellationToken cancellationToken = default);
+        bool multiselect = true);
 }
