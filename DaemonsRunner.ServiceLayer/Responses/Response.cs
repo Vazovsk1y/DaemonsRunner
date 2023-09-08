@@ -1,12 +1,33 @@
-﻿using DaemonsRunner.BuisnessLayer.Responses.Enums;
-using DaemonsRunner.BuisnessLayer.Responses.Interfaces;
+﻿using DaemonsRunner.BuisnessLayer.Responses;
 
-namespace DaemonsRunner.Domain.Responses
+namespace DaemonsRunner.Domain.Responses;
+
+public record Response 
 {
-    public class Response : IResponse
-    {
-        public string Description { get; set; }
+	private const string SuccessMessage = "Operation successfully completed.";
+	private const string FailMessage = "Operation wasn't successfully completed.";
 
-        public StatusCode OperationStatus { get; set; }
-    }
+	public string Description { get; }
+
+	public StatusCode OperationStatus { get; set; }
+
+	protected Response(string description, StatusCode operationStatus)
+	{
+		Description = description;
+		OperationStatus = operationStatus;
+	}
+
+	public static Response Success(string operationDescription = SuccessMessage) => new(operationDescription, StatusCode.Success);
+
+	public static Response Fail(string operationDescription = SuccessMessage) => new(operationDescription, StatusCode.Fail);
+
+	public static DataResponse<T> Success<T>(T value, string operationDescription = FailMessage) => new(value, operationDescription, StatusCode.Success);
+
+	public static DataResponse<T> Fail<T>(string operationDescription = FailMessage) => new(default, operationDescription, StatusCode.Fail);
+}
+
+public enum StatusCode
+{
+	Success,
+	Fail,
 }
