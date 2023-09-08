@@ -31,6 +31,8 @@ public class ExecutableFile
 
     public static ExecutableFile Create(string path)
     {
+        ArgumentException.ThrowIfNullOrEmpty(path);
+
         string extension = System.IO.Path.GetExtension(path);
         if (string.IsNullOrWhiteSpace(extension))
         {

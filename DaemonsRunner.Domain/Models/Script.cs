@@ -2,25 +2,28 @@
 
 namespace DaemonsRunner.Domain.Models;
 
-public class Script : IExecutableScript
+public class Script : Entity<ScriptId>
 {
-    public ExecutableFile? ExecutableFile { get; }
+    public ExecutableFile? ExecutableFile { get; set; }
 
-    public string Title { get; }
+    public string Title { get; set; }
 
-    public string Command { get; }
+    public string Command { get; set; }
 
     private Script(
         string title,
         string command,
-        ExecutableFile? executableFile = null)
+        ExecutableFile? executableFile = null) : base()
     {
         ExecutableFile = executableFile;
         Title = title;
         Command = command;
     }
 
-    public static Script Create(
+    // for EF
+    private Script(ScriptId scriptId) : base(scriptId) { }
+
+	public static Script Create(
         string title,
         string command,
         ExecutableFile? executableFile = null)
@@ -30,4 +33,9 @@ public class Script : IExecutableScript
 
         return new Script(title, command, executableFile);
     }
+}
+
+public record ScriptId(Guid Value) : IValueId<ScriptId>
+{
+    public static ScriptId Create() => new(Guid.NewGuid());
 }
