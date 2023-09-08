@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 
 namespace DaemonsRunner.DAL.Repositories;
 
-public class ScriptRepository : IRepository<Script>
+public class ScriptRepository : IScriptRepository
 {
 	private readonly string _storageFilePath;
 	private readonly object _locker = new();
@@ -42,6 +42,25 @@ public class ScriptRepository : IRepository<Script>
 			using var reader = new StreamReader(_storageFilePath);
 			string json = reader.ReadToEnd();
 			return JsonConvert.DeserializeObject<IEnumerable<ScriptJsonModel>>(json)?.Select(e => e.ToModel()) ?? Enumerable.Empty<Script>();
+		}
+	}
+
+	public void Remove(ScriptId scriptId)
+	{
+		lock (_locker)
+		{
+			var currentEntities = GetAll().ToList();
+
+			var itemToRemove = currentEntities.FirstOrDefault(e => e.Id == scriptId);
+			if (itemToRemove is null)
+			{
+				return;
+			}
+
+			currentEntities.Remove(itemToRemove);
+			using var writer = new StreamWriter(_storageFilePath);
+			string json = JsonConvert.SerializeObject(currentEntities, Formatting.Indented);
+			writer.Write(json);
 		}
 	}
 }
