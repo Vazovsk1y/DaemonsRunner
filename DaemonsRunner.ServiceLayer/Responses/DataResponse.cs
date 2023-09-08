@@ -1,6 +1,4 @@
-﻿using DaemonsRunner.Domain.Responses;
-
-namespace DaemonsRunner.BuisnessLayer.Responses;
+﻿namespace DaemonsRunner.BuisnessLayer.Responses;
 
 public record DataResponse<T> : Response
 {

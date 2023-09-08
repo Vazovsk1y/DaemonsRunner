@@ -1,6 +1,6 @@
 ﻿using DaemonsRunner.BuisnessLayer.Responses;
 
-namespace DaemonsRunner.Domain.Responses;
+namespace DaemonsRunner.BuisnessLayer.Responses;
 
 public record Response 
 {
