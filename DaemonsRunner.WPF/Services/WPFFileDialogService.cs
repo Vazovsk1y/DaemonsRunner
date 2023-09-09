@@ -1,71 +1,57 @@
-﻿using DaemonsRunner.Domain.Models;
-using Microsoft.Win32;
+﻿using Microsoft.Win32;
 using DaemonsRunner.BuisnessLayer.Services.Interfaces;
 using Microsoft.Extensions.Logging;
-using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Linq;
-using DaemonsRunner.BuisnessLayer.Responses.Enums;
-using DaemonsRunner.BuisnessLayer.Responses.Interfaces;
 using DaemonsRunner.BuisnessLayer.Responses;
+using System.IO;
 
-namespace DaemonsRunner.Services
+namespace DaemonsRunner.Services;
+
+public class WPFFileDialogService : IFileDialog
 {
-    public class WPFFileDialogService : IFileDialog
-    {
-        private readonly ILogger<WPFFileDialogService> _logger;
-        private readonly OpenFileDialog _fileDialog = new()
-        {
-            Multiselect = true,
-            Title = "Choose files:",
-            Filter = "php files (*.php) | *.php",
-            RestoreDirectory = true,
-        };
+	private readonly ILogger<WPFFileDialogService> _logger;
 
-        public WPFFileDialogService(ILogger<WPFFileDialogService> logger)
-        {
-            _logger = logger;
-        }
+	public WPFFileDialogService(ILogger<WPFFileDialogService> logger)
+	{
+		_logger = logger;
+	}
 
-        public Task<IDataResponse<IEnumerable<PHPFile>>> StartDialogAsync()
-        {
-            var response = new DataResponse<IEnumerable<PHPFile>>()
-            {
-                OperationStatus = StatusCode.Fail,
-            };
+	public DataResponse<IEnumerable<FileInfo>> StartDialog(
+	string filter = "",
+	string title = "Choose files:",
+	bool multiselect = true)
+	{
+		var fileDialog = new OpenFileDialog
+		{
+			Multiselect = multiselect,
+			Filter = filter,
+			Title = title,
+			RestoreDirectory = true,
+		};
 
-            _logger.LogInformation("Dialog started");
-            var dialogResult = _fileDialog.ShowDialog();
-            _logger.LogInformation("Dialog ended with result: [{dialogResult}]", dialogResult);
+		var dialogResult = fileDialog.ShowDialog();
 
-            if (dialogResult is bool result && result is true)
-            {
-                var data = GetPHPFiles().ToList();
-                response.OperationStatus = StatusCode.Success;
-                response.Data = data;
-                response.Description = $"[{data.Count}] files were selected!";
+		if (dialogResult is bool result && result is true)
+		{
+			var data = GetFileInfos(fileDialog);
+			return Response.Success(data, $"[{data.Count()}] files were selected.");
+		}
 
-                return Task.FromResult<IDataResponse<IEnumerable<PHPFile>>>(response);
-            }
+		return Response.Fail<IEnumerable<FileInfo>>("No files were selected.");
+	}
 
-            response.Description = "No files were selected.";
-            return Task.FromResult<IDataResponse<IEnumerable<PHPFile>>>(response);
-        }
+	private IEnumerable<FileInfo> GetFileInfos(OpenFileDialog fileDialog)
+	{
+		var fullFilesPath = fileDialog.FileNames;
+		List<FileInfo> files = new();
 
-        private IEnumerable<PHPFile> GetPHPFiles()
-        {
-            _logger.LogInformation("Searching php-files in selected files started");
-            var fullFilesPath = _fileDialog.FileNames;
-            var filesName = _fileDialog.SafeFileNames;
-            List<PHPFile> files = new();
+		for (int i = 0; i < fullFilesPath.Length; i++)
+		{
+			files.Add(new FileInfo(fullFilesPath[i]));
+		}
 
-            for (int i = 0; i < fullFilesPath.Length; i++)
-            {
-                files.Add(PHPFile.Create(filesName[i], fullFilesPath[i]));
-            }
-
-            _logger.LogInformation("Php-files count in selected files [{demonsCount}]", files.Count);
-            return files;
-        }
-    }
+		_logger.LogInformation("Files count in selected files [{demonsCount}]", files.Count);
+		return files;
+	}
 }

@@ -68,11 +68,15 @@ public class ScriptRepository : IScriptRepository
 
 public class ScriptJsonModel
 {
-	public required Guid Id { get; init; }
+#pragma warning disable IDE1006 // Naming Styles
 
-	public string Title { get; set; } = null!;
+	public required Guid id { get; init; }
 
-	public string Command { get; set; } = null!;
+	public string title { get; set; } = null!;
 
-	public string? ExecutableFilePath { get; set; }
+	public string command { get; set; } = null!;
+
+	public string? executable_file_path { get; set; }
+
+#pragma warning restore IDE1006 // Naming Styles
 }

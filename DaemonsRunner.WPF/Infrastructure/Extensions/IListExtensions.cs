@@ -48,17 +48,17 @@ namespace DaemonsRunner.Infrastructure.Extensions
         /// <returns>
         /// true - if any item was added, false - if collection wasn't modified.
         /// </returns>
-        public static bool AddFileIfNotExist(this IList<PHPFile> demons, IEnumerable<PHPFile> filesToAdd)
+        public static bool AddFileIfNotExist(this IList<ExecutableFile> files, IEnumerable<ExecutableFile> filesToAdd)
         {
             ArgumentNullException.ThrowIfNull(filesToAdd);
 
             bool isCollectionModified = false;
             foreach (var file in filesToAdd)
             {
-                if (demons.FirstOrDefault(d => d.Name == file.Name && d.FullPath == file.FullPath) is null)
+                if (files.FirstOrDefault(d => d.Path == file.Path) is null)
                 {
                     isCollectionModified = true;
-                    demons.Add(file);
+                    files.Add(file);
                 }
             }
             return isCollectionModified;

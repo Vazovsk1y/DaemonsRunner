@@ -1,9 +1,8 @@
 ﻿using DaemonsRunner.Domain.Models;
 
-namespace DaemonsRunner.ViewModels.Interfaces
+namespace DaemonsRunner.ViewModels.Interfaces;
+
+internal interface IScriptExecutorViewModelFactory
 {
-    internal interface IScriptExecutorViewModelFactory
-    {
-        public IScriptExecutorViewModel CreateViewModel(PHPScriptExecutor scriptExecutor);
-    }
+    ScriptExecutorViewModel CreateViewModel(ScriptExecutor scriptExecutor);
 }

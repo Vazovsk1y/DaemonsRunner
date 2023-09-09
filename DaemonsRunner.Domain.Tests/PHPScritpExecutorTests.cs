@@ -2,6 +2,7 @@
 using DaemonsRunner.Domain.Models;
 using DaemonsRunner.Domain.Tests.Infrastructure;
 using DaemonsRunner.Domain.Tests.Infrastructure.EventSpies;
+using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 
 namespace DaemonsRunner.Domain.Tests
 {
@@ -27,108 +28,106 @@ namespace DaemonsRunner.Domain.Tests
         }
 
         [Fact]
-        public async Task IS_Object_Disposed_Exception_Thrown_on_disposed_object_methodsUsing()
+        public void IS_Object_Disposed_Exception_Thrown_on_disposed_object_methodsUsing()
         {
             using var testObject = CreateTestExecutor();
 
             testObject.Dispose();
 
-            await Assert.ThrowsAsync<ObjectDisposedException>(testObject.StartAsync);
-            await Assert.ThrowsAsync<ObjectDisposedException>(testObject.StartMessagesReceivingAsync);
-            await Assert.ThrowsAsync<ObjectDisposedException>(testObject.ExecuteCommandAsync);
-            await Assert.ThrowsAsync<ObjectDisposedException>(testObject.StopMessagesReceivingAsync);
-            await Assert.ThrowsAsync<ObjectDisposedException>(testObject.StopAsync);
+            Assert.Throws<ObjectDisposedException>(testObject.Start);
+            Assert.Throws<ObjectDisposedException>(testObject.StartMessagesReceiving);
+            Assert.Throws<ObjectDisposedException>(testObject.ExecuteCommand);
+            Assert.Throws<ObjectDisposedException>(testObject.StopMessagesReceiving);
+            Assert.Throws<ObjectDisposedException>(testObject.Stop);
         }
 
         [Fact]
-        public async Task IS_Starting_Correct()
+        public void IS_Starting_Correct()
         {
             bool expected = true;
             using var testObject = CreateTestExecutor();
 
-            await testObject.StartAsync();
+            testObject.Start();
 
             Assert.Equal(expected, testObject.IsRunning);
         }
 
         [Fact]
-        public async Task IS_Start_NOT_Available_when_try_to_start_already_running_executor()
+        public void IsMultiplyStartMethodCallingDoesntRaiseExceptions()
         {
             using var testExecutor = CreateTestExecutor();
 
-            var startingResult = await testExecutor.StartAsync();
-
-            await Assert.ThrowsAsync<DomainException>(testExecutor.StartAsync);
+            testExecutor.Start();
+			testExecutor.Start();
+			testExecutor.Start();
+			testExecutor.Start();
         }
 
         [Fact]
-        public async Task IS_Stopping_Correct()
+        public void IsMultiplyStopMethodCallingDoesntRaiseExceptions()
+        {
+            using var testObject = CreateTestExecutor();
+
+            testObject.Start();
+
+			testObject.Stop();
+			testObject.Stop();
+			testObject.Stop();
+			testObject.Stop();
+			testObject.Stop();
+			testObject.Stop();
+		}
+
+        [Fact]
+        public void IS_Stopping_Correct()
         {
             bool expected = false;
             using var testObject = CreateTestExecutor();
 
-            await testObject.StartAsync();
-            await testObject.StopAsync();
+            testObject.Start();
+            testObject.Stop();
 
             Assert.Equal(expected, testObject.IsRunning);
         }
 
         [Fact]
-        public async Task IS_Stop_NOT_Available_when_try_to_stop_not_running_executor()
+        public void IsFullStoppedWith_messages_receiving()
         {
             using var testExecutor = CreateTestExecutor();
 
-            await Assert.ThrowsAsync<DomainException>(testExecutor.StopAsync);
+            testExecutor.Start();
+            testExecutor.Stop();
+
+            Assert.False(testExecutor.IsRunning);
+            Assert.False(testExecutor.IsMessagesReceiving);
         }
 
         [Fact]
-        public async Task IS_Stop_NOT_Available_when_try_to_stop_but_messages_receiving_is_not_stopped()
-        {
-            using var testExecutor = CreateTestExecutor();
-
-            await testExecutor.StartAsync();
-            await testExecutor.StartMessagesReceivingAsync();
-
-            await Assert.ThrowsAsync<DomainException>(testExecutor.StopAsync);
-        }
-
-        [Fact]
-        public async Task IS_Messages_Receiving_Starting_Correct()
+        public void IS_Messages_Receiving_Starting_Correct()
         {
             bool expected = true;
             using var testExecutor = CreateTestExecutor();
 
-            await testExecutor.StartAsync();
-            await testExecutor.StartMessagesReceivingAsync();
+            testExecutor.Start();
+            testExecutor.StartMessagesReceiving();
 
             Assert.Equal(expected, testExecutor.IsMessagesReceiving);
         }
 
         [Fact]
-        public async Task IS_Messages_Receiving_NOT_Available_when_executor_was_not_started()
+        public void IS_Messages_Receiving_NOT_Available_when_executor_was_not_started()
         {
             using var testExecutor = CreateTestExecutor();
 
-            await Assert.ThrowsAsync<DomainException>(testExecutor.StartMessagesReceivingAsync);
+            Assert.Throws<DomainException>(testExecutor.StartMessagesReceiving);
         }
 
         [Fact]
-        public async Task IS_Messages_Receiving_NOT_Available_when_messages_receiving_already_started()
+        public void IS_Command_Executing_NOT_Available_when_executor_NOT_started()
         {
             using var testExecutor = CreateTestExecutor();
 
-            await testExecutor.StartAsync();
-            await testExecutor.StartMessagesReceivingAsync();
-
-            await Assert.ThrowsAsync<DomainException>(testExecutor.StartMessagesReceivingAsync);
-        }
-
-        [Fact]
-        public async Task IS_Command_Executing_NOT_Available_when_executor_NOT_started()
-        {
-            using var testExecutor = CreateTestExecutor();
-
-            await Assert.ThrowsAsync<DomainException>(testExecutor.ExecuteCommandAsync);
+            Assert.Throws<DomainException>(testExecutor.ExecuteCommand);
         }
 
         [Fact]
@@ -138,8 +137,8 @@ namespace DaemonsRunner.Domain.Tests
             var eventSpy = new ExecutorExitedByTaskManagerEventSpy();
             testExecutor.ExitedByTaskManager += eventSpy.HandleEvent;
 
-            await testExecutor.StartAsync();
-            await testExecutor.StopAsync();
+            testExecutor.Start();
+            testExecutor.Stop();
             await Task.Delay(eventSpy.EventWaitTimeMs);
 
             Assert.False(eventSpy.EventHandled);
@@ -149,15 +148,15 @@ namespace DaemonsRunner.Domain.Tests
         [InlineData(2)]
         [InlineData(5)]
         [InlineData(10)]
-        public async Task IS_Executor_Can_Be_Reusable_when_only_start_and_stop_invoked(int reusingCycleCount)
+        public void IS_Executor_Can_Be_Reusable_when_only_start_and_stop_invoked(int reusingCycleCount)
         {
             using var testExecutor = CreateTestExecutor();
 
             for (int i = 0; i < reusingCycleCount; i++)
             {
-                await testExecutor.StartAsync();
+                testExecutor.Start();
                 Assert.True(testExecutor.IsRunning);
-                await testExecutor.StopAsync();
+                testExecutor.Stop();
                 Assert.False(testExecutor.IsRunning);
             }
         }
@@ -166,35 +165,35 @@ namespace DaemonsRunner.Domain.Tests
         [InlineData(2)]
         [InlineData(5)]
         [InlineData(10)]
-        public async Task IS_Executor_Can_Be_Reusable_when_all_executor_methods_invoked(int reusingCycleCount)
+        public void IS_Executor_Can_Be_Reusable_when_all_executor_methods_invoked(int reusingCycleCount)
         {
             using var testExecutor = CreateTestExecutor();
 
             for (int i = 0; i < reusingCycleCount; i++)
             {
-                await testExecutor.StartAsync();
+                testExecutor.Start();
                 Assert.True(testExecutor.IsRunning);
 
-                await testExecutor.StartMessagesReceivingAsync();
+                testExecutor.StartMessagesReceiving();
                 Assert.True(testExecutor.IsMessagesReceiving);
 
-                await testExecutor.ExecuteCommandAsync();
+                testExecutor.ExecuteCommand();
 
-                await testExecutor.StopMessagesReceivingAsync();
+                testExecutor.StopMessagesReceiving();
                 Assert.False(testExecutor.IsMessagesReceiving);
 
-                await testExecutor.StopAsync();
+                testExecutor.Stop();
                 Assert.False(testExecutor.IsRunning);
             }
         }
 
-        private PHPScriptExecutor CreateTestExecutor()
+        private ScriptExecutor CreateTestExecutor()
         {
             var randomFileName = _testStorage.GetRandomFileName();
-            var phpFile = PHPFile.Create(randomFileName, Path.Combine(_testStorage.TestDirectoryPath, randomFileName));
-            var script = PHPScript.Create(phpFile);
+            var phpFile = ExecutableFile.Create(Path.Combine(_testStorage.TestDirectoryPath, randomFileName));
+            var script = Script.Create("Random", $"php {phpFile.Name} start", phpFile);
 
-            return PHPScriptExecutor.Create(script);
+            return ScriptExecutor.Create(script);
         }
     }
 }

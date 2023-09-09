@@ -1,62 +1,53 @@
-﻿using DaemonsRunner.BuisnessLayer.Services.Interfaces;
-using DaemonsRunner.Commands;
-using DaemonsRunner.ViewModels.Base;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using DaemonsRunner.BuisnessLayer.Services.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Windows.Input;
 
-namespace DaemonsRunner.ViewModels
+namespace DaemonsRunner.ViewModels;
+
+internal class NotificationPanelViewModel : ObservableObject
 {
-    internal class NotificationPanelViewModel : BaseViewModel, IDisposable
-    {
-        #region --Fields--
+	#region --Fields--
 
-        private readonly IDataBus _dataBus;
-        private readonly ObservableCollection<string> _notifications = new();
-        private readonly ICollection<IDisposable> _subscriptions = new List<IDisposable>();
+	private readonly IDataBus _dataBus;
+	private readonly ObservableCollection<string> _notifications = new();
+	private readonly ICollection<IDisposable> _subscriptions = new List<IDisposable>();
 
-        #endregion
+	#endregion
 
-        #region --Properties--
+	#region --Properties--
 
-        public ObservableCollection<string> Notifications => _notifications;
+	public ObservableCollection<string> Notifications => _notifications;
 
-        #endregion
+	#endregion
 
-        #region --Constructors--
+	#region --Constructors--
 
-        public NotificationPanelViewModel() { }
+	public NotificationPanelViewModel() { }
 
-        public NotificationPanelViewModel(IDataBus dataBus)
-        {
-            _dataBus = dataBus;
-            _subscriptions.Add(_dataBus.RegisterHandler<string>(OnMessageReceived));
-        }
+	public NotificationPanelViewModel(IDataBus dataBus)
+	{
+		_dataBus = dataBus;
+		_subscriptions.Add(_dataBus.RegisterHandler<string>(OnMessageReceived));
+		_notifications.CollectionChanged += (_, _) => ClearNotificationsCommand.NotifyCanExecuteChanged();
+	}
 
-        #endregion
+	#endregion
 
-        #region --Commands--
+	#region --Commands--
 
-        public ICommand ClearNotificationsCommand => new RelayCommand(
-            (arg) => Notifications.Clear(),
-            (arg) => Notifications.Count > 0);
+	public IRelayCommand ClearNotificationsCommand => new RelayCommand(
+		Notifications.Clear,
+		() => Notifications.Count > 0);
 
-        #endregion
+	#endregion
 
-        #region --Methods--
+	#region --Methods--
 
-        public void Dispose() 
-        {
-            foreach (var subscription in _subscriptions)
-            {
-                subscription.Dispose();
-            }
-        }
+	private async void OnMessageReceived(string message) =>
+		await App.Current.Dispatcher.InvokeAsync(() => Notifications.Add($"[{DateTime.Now.ToShortTimeString()}]: {message}"));
 
-        private async void OnMessageReceived(string message) =>
-            await App.Current.Dispatcher.InvokeAsync(() => Notifications.Add($"[{DateTime.Now.ToShortTimeString()}]: {message}"));
-
-        #endregion
-    }
+	#endregion
 }

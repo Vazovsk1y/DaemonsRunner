@@ -1,65 +1,51 @@
-﻿using DaemonsRunner.ViewModels.Base;
-using System;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 
-namespace DaemonsRunner.ViewModels
+namespace DaemonsRunner.ViewModels;
+
+internal partial class MainWindowViewModel : ObservableObject
 {
-    internal class MainWindowViewModel : BaseViewModel, IDisposable
-    {
-        #region --Fields--
+	#region --Fields--
 
-        private string _windowTitle = App.Name;
 
-        #endregion
+	#endregion
 
-        #region --Properties--
+	#region --Properties--
 
-        public FilesPanelViewModel FilesPanelViewModel { get; }
+	public ScriptsPanelViewModel ScriptsPanelViewModel { get; }
 
-        public WorkSpaceViewModel WorkSpaceViewModel { get; }
+	public NotificationPanelViewModel NotificationPanelViewModel { get; }
 
-        public NotificationPanelViewModel NotificationPanelViewModel { get; }
+	[ObservableProperty]
+	private string _windowTitle = App.Name;
 
-        public string WindowTitle
-        {
-            get => _windowTitle;
-            set => Set(ref _windowTitle, value);
-        }
+	#endregion
 
-        #endregion
+	#region --Constructors--
 
-        #region --Constructors--
+	public MainWindowViewModel()
+	{
 
-        public MainWindowViewModel()
-        {
+	}
 
-        }
+	public MainWindowViewModel(
+		ScriptsPanelViewModel workSpaceViewModel,
+		NotificationPanelViewModel userNotificationViewModel)
+	{
+		ScriptsPanelViewModel = workSpaceViewModel;
+		NotificationPanelViewModel = userNotificationViewModel;
+		ScriptsPanelViewModel.IsActive = true;
+	}
 
-        public MainWindowViewModel(
-            FilesPanelViewModel filesPanelViewModel,
-            WorkSpaceViewModel workSpaceViewModel,
-            NotificationPanelViewModel userNotificationViewModel)
-        {
-            WorkSpaceViewModel = workSpaceViewModel;
-            FilesPanelViewModel = filesPanelViewModel;
-            NotificationPanelViewModel = userNotificationViewModel;
-        }
+	#endregion
 
-        #endregion
-
-        #region --Commands--
+	#region --Commands--
 
 
 
-        #endregion
+	#endregion
 
-        #region --Methods--
+	#region --Methods--
 
-        public void Dispose()
-        {
-            NotificationPanelViewModel.Dispose();
-            WorkSpaceViewModel.Dispose();
-        }
 
-        #endregion
-    }
+	#endregion
 }

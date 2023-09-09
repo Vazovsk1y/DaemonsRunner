@@ -2,11 +2,10 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:DaemonsRunner.Views.Controls" 
-             xmlns:viewmodels="clr-namespace:DaemonsRunner.ViewModels" 
-             xmlns:m="clr-namespace:DaemonsRunner.Domain.Models;assembly=DaemonsRunner.Domain"
-             d:DataContext="{d:DesignInstance Type=viewmodels:WorkSpaceViewModel, IsDesignTimeCreatable=True}"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:viewmodels="clr-namespace:DaemonsRunner.ViewModels"
+             xmlns:vms="clr-namespace:DaemonsRunner.WPF.ViewModels"
+             d:DataContext="{d:DesignInstance Type=viewmodels:ScriptsPanelViewModel}"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
@@ -15,18 +14,18 @@
                 <TabItem.Header>
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="Сконфигурированные скрипты"/>
-                        <TextBlock Text="{Binding ConfiguredScripts.Count}"/>
+                        <TextBlock Text="{Binding Scripts.Count}"/>
                     </StackPanel>
                 </TabItem.Header>
                 <DockPanel>
                     <UniformGrid DockPanel.Dock="Bottom"
                                      Rows="1">
-                        <Button Content="Сконфигурировать"
+                        <Button Content="Добавить"
                                     Margin="5"
-                                    Command="{Binding ConfigureScriptsCommand}"/>
-                        <Button Content="Сбросить скрипты"
+                                    Command="{Binding AddScriptCommand}"/>
+                        <Button Content="Удалить"
                                     Margin="5"
-                                    Command="{Binding ClearConfiguredScripts}"/>
+                                    Command="{Binding RemoveScriptCommand}"/>
                         <Button Content="Запустить"
                                     Margin="5"
                                     Command="{Binding StartScriptsCommand}"/>
@@ -34,7 +33,8 @@
                                     Margin="5"
                                     Command="{Binding StopScriptsCommand}"/>
                     </UniformGrid>
-                    <ListBox ItemsSource="{Binding ConfiguredScripts}">
+                    <ListBox ItemsSource="{Binding Scripts}"
+                             SelectedItem="{Binding SelectedScript}">
                         <ListBox.ItemContainerStyle>
                             <Style TargetType="{x:Type ListBoxItem}">
                                 <Setter Property="BorderBrush" Value="Black"/>
@@ -43,16 +43,17 @@
                             </Style>
                         </ListBox.ItemContainerStyle>
                         <ListBox.ItemTemplate>
-                            <DataTemplate DataType="{x:Type m:PHPScript}">
+                            <DataTemplate DataType="{x:Type vms:ScriptViewModel}">
                                 <StackPanel>
                                     <TextBlock 
-                                            Text="{Binding Name, StringFormat='Название скрипта: {0}'}"/>
+                                            Text="{Binding Title, StringFormat='Название скрипта: {0}'}"/>
                                     <TextBlock Foreground="Red"
                                                    Text="{Binding Command, StringFormat='Команда на выполнение: {0}'}"/>
                                     <TextBlock Foreground="Blue"
-                                                   Text="{Binding ExecutableFile.Name, StringFormat='Исполняемый файл: {0}'}"/>
+                                                   Text="{Binding ExecutableFileViewModel.Name, StringFormat='Исполняемый файл: {0}'}"/>
                                     <TextBlock Foreground="Coral"
-                                                   Text="{Binding ExecutableFile.FullPath}"/>
+                                                   Text="{Binding ExecutableFileViewModel.Path}"/>
+                                    <CheckBox Content="ReadyToStart" IsChecked="{Binding IsReadyToStart}"/>
                                 </StackPanel>
                             </DataTemplate>
                         </ListBox.ItemTemplate>
@@ -64,11 +65,11 @@
                 <TabItem.Header>
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="Панель вывода"/>
-                        <TextBlock Text="{Binding ScriptsExecutorsViewModels.Count, UpdateSourceTrigger=PropertyChanged}"/>
+                        <TextBlock Text="{Binding RunningScripts.Count, UpdateSourceTrigger=PropertyChanged}"/>
                     </StackPanel>
                 </TabItem.Header>
                 <ScrollViewer VerticalScrollBarVisibility="Auto">
-                    <ListBox ItemsSource="{Binding ScriptsExecutorsViewModels}">
+                    <ListBox ItemsSource="{Binding RunningScripts}">
                         <ListBox.ItemContainerStyle>
                             <Style TargetType="{x:Type ListBoxItem}">
                                 <Setter Property="BorderBrush" Value="Black"/>
@@ -77,10 +78,10 @@
                             </Style>
                         </ListBox.ItemContainerStyle>
                         <ListBox.ItemTemplate>
-                            <DataTemplate DataType="{x:Type viewmodels:PHPScriptExecutorViewModel}">
+                            <DataTemplate DataType="{x:Type viewmodels:ScriptExecutorViewModel}">
                                 <StackPanel>
                                     <TextBlock Foreground="Red" 
-                                                   Text="{Binding ScriptExecutor.ExecutableScript.Name, StringFormat='Отправитель: {0}'}"/>
+                                                   Text="{Binding Title, StringFormat='Отправитель: {0}'}"/>
                                     <Expander>
                                         <Expander.Header>
                                             <StackPanel Orientation="Horizontal">

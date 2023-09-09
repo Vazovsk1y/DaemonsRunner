@@ -1,6 +1,4 @@
-﻿using DaemonsRunner.BuisnessLayer.Responses;
-
-namespace DaemonsRunner.BuisnessLayer.Responses;
+﻿namespace DaemonsRunner.BuisnessLayer.Responses;
 
 public record Response 
 {
@@ -9,7 +7,7 @@ public record Response
 
 	public string Description { get; }
 
-	public StatusCode OperationStatus { get; set; }
+	public StatusCode OperationStatus { get; }
 
 	protected Response(string description, StatusCode operationStatus)
 	{
@@ -19,9 +17,9 @@ public record Response
 
 	public static Response Success(string operationDescription = SuccessMessage) => new(operationDescription, StatusCode.Success);
 
-	public static Response Fail(string operationDescription = SuccessMessage) => new(operationDescription, StatusCode.Fail);
+	public static Response Fail(string operationDescription = FailMessage) => new(operationDescription, StatusCode.Fail);
 
-	public static DataResponse<T> Success<T>(T value, string operationDescription = FailMessage) => new(value, operationDescription, StatusCode.Success);
+	public static DataResponse<T> Success<T>(T value, string operationDescription = SuccessMessage) => new(value, operationDescription, StatusCode.Success);
 
 	public static DataResponse<T> Fail<T>(string operationDescription = FailMessage) => new(default, operationDescription, StatusCode.Fail);
 }

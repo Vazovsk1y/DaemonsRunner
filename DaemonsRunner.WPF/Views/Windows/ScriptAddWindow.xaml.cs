@@ -10,19 +10,18 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace DaemonsRunner.Views.Controls
+namespace DaemonsRunner.WPF.Views.Windows
 {
-    /// <summary>
-    /// Interaction logic for FilesPanelControl.xaml
-    /// </summary>
-    public partial class FilesPanelControl : UserControl
-    {
-        public FilesPanelControl()
-        {
-            InitializeComponent();
-        }
-    }
+	/// <summary>
+	/// Interaction logic for ScriptAddWindow.xaml
+	/// </summary>
+	public partial class ScriptAddWindow : Window
+	{
+		public ScriptAddWindow()
+		{
+			InitializeComponent();
+		}
+	}
 }

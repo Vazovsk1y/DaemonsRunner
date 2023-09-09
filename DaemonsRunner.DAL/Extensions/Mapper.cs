@@ -16,10 +16,10 @@ public static class Mapper
             throw new InvalidOperationException("Unable to find suitable private ctor for creating script.");
         }
 
-        var script = (Script)ctor.Invoke(new object[] { new ScriptId(model.Id) });
-        script.Title = model.Title;
-        script.Command = model.Command;
-        script.ExecutableFile = model.ExecutableFilePath is null ? null : ExecutableFile.Create(model.ExecutableFilePath);
+        var script = (Script)ctor.Invoke(new object[] { new ScriptId(model.id) });
+        script.Title = model.title;
+        script.Command = model.command;
+        script.ExecutableFile = model.executable_file_path is null ? null : ExecutableFile.Create(model.executable_file_path);
         return script;
 	}
 
@@ -27,10 +27,10 @@ public static class Mapper
     {
         return new ScriptJsonModel
         {
-            Id = script.Id.Value,
-            Title = script.Title,
-            Command = script.Command,
-            ExecutableFilePath = script.ExecutableFile?.Path
+            id = script.Id.Value,
+            title = script.Title,
+            command = script.Command,
+            executable_file_path = script.ExecutableFile?.Path
         };
     }
 }
