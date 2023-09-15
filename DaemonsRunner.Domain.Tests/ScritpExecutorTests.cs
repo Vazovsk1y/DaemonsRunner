@@ -16,6 +16,7 @@ public class ScritpExecutorTests
         Assert.Throws<ObjectDisposedException>(() => testObject.IsRunning);
         Assert.Throws<ObjectDisposedException>(() => testObject.IsMessagesReceiving);
         Assert.Throws<ObjectDisposedException>(() => testObject.ExecutableScript);
+        Assert.Throws<ObjectDisposedException>(() => testObject.Title);
     }
 
     [Fact]
