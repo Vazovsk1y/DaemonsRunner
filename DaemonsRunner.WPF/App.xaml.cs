@@ -1,109 +1,105 @@
 ﻿using DaemonsRunner.BuisnessLayer.Extensions;
+using DaemonsRunner.DAL;
 using DaemonsRunner.DAL.Extensions;
 using DaemonsRunner.Infrastructure.Extensions;
+using DaemonsRunner.WPF;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Serilog;
+using Microsoft.Extensions.Logging;
 using System;
 using System.IO;
 using System.Runtime.CompilerServices;
-using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 
-namespace DaemonsRunner
+namespace DaemonsRunner;
+
+/// <summary>
+/// Interaction logic for App.xaml
+/// </summary>
+public partial class App : Application
 {
-    /// <summary>
-    /// Interaction logic for App.xaml
-    /// </summary>
-    public partial class App : Application
-    {
-        #region --Fields--
+	#region --Fields--
 
-        private static IHost? _host;
+	private static IHost? _host;
 
-        public static readonly string Name = AppDomain.CurrentDomain.FriendlyName;
+	public const string Name = "DaemonsRunner";
 
-        #endregion
+	public const string CompanyName = "Vazovskiy";
 
-        #region --Properties--
+	#endregion
 
-        public static string CurrentDirectory => IsDesignMode ? Path.GetDirectoryName(GetSourceCodePath())! : Environment.CurrentDirectory;
+	#region --Properties--
 
-        public static bool IsDesignMode { get; private set; } = true;
+	public static string WorkingDirectory => IsDesignMode ? Path.GetDirectoryName(GetSourceCodePath())! : Environment.CurrentDirectory;
 
-        public static IServiceProvider Services => Host.Services;
+	public static string AssociatedFolderInAppDataPath => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), CompanyName, Name);
 
-        public static IHost Host => _host ??= Program.CreateHostBuilder(Environment.GetCommandLineArgs()).Build();
+	public static bool IsDesignMode { get; private set; } = true;
 
-        #endregion
+	public static IServiceProvider Services => Host.Services;
 
-        #region --Constructors--
+	public static IHost Host => _host ??= Program.CreateHostBuilder(Environment.GetCommandLineArgs()).Build();
 
-        public App()
-        {
-            SetupGlobalExceptionsHandlers();
-        }
+	#endregion
 
-        #endregion
+	#region --Constructors--
 
-        #region --Methods--
+	public App()
+	{
+	}
 
-        public static void ConfigureServices(HostBuilderContext host, IServiceCollection services) => services
-            .AddBuisnessLayer()
-            .AddDataAccessLayer()
-            .AddClientLayer()
-            ;
+	#endregion
 
-        public bool IsNewAppProcessInstance()
-        {
-            try
-            {
-                EventWaitHandle eventWaitHandle = EventWaitHandle.OpenExisting(Name); // here will be exception if app is not even starting
-                eventWaitHandle.Set();
-            }
-            catch (WaitHandleCannotBeOpenedException)
-            {
-                return true;
-            }
-            return false;
-        }
+	#region --Methods--
 
-        private static string GetSourceCodePath([CallerFilePath] string path = null) => string.IsNullOrWhiteSpace(path)
-            ? throw new ArgumentNullException(nameof(path)) : path;
+	public static void ConfigureServices(HostBuilderContext host, IServiceCollection services) => services
+		.AddBuisnessLayer()
+		.AddDataAccessLayer()
+		.AddWPF()
+		;
 
-        private void SetupGlobalExceptionsHandlers()
-        {
-            DispatcherUnhandledException += (sender, e) =>
-            {
-                Log.Error(e.Exception, "Something went wrong in {nameofDispatcherUnhandledException}",
-                    nameof(DispatcherUnhandledException));
-                e.Handled = true;
-                Current?.Shutdown();
-            };
+	private static string GetSourceCodePath([CallerFilePath] string path = null) => string.IsNullOrWhiteSpace(path)
+		? throw new ArgumentNullException(nameof(path)) : path;
 
-            AppDomain.CurrentDomain.UnhandledException += (sender, e) =>
-            {
-                Log.Error(e.ExceptionObject as Exception, "Something went wrong in {nameofCurrentDomainUnhandledException}",
-                    nameof(AppDomain.CurrentDomain.UnhandledException));
-            };
-        }
+	public void StartGlobalExceptionsHandling()
+	{
+		DispatcherUnhandledException += (sender, e) =>
+		{
+			var logger = Services.GetRequiredService<ILogger<App>>();
+			logger.LogError(e.Exception, "Something went wrong in [{nameofDispatcherUnhandledException}]", nameof(DispatcherUnhandledException));
+			e.Handled = true;
+			Current?.Shutdown();
+		};
 
-        protected override async void OnStartup(StartupEventArgs e)
-        {
-            IsDesignMode = false;
-            base.OnStartup(e);
-            await Host.StartAsync();
-            Services.GetRequiredService<MainWindow>().Show();
-        }
+		AppDomain.CurrentDomain.UnhandledException += (sender, e) =>
+		{
+			var logger = Services.GetRequiredService<ILogger<App>>();
+			logger.LogError(e.ExceptionObject as Exception, "Something went wrong in [{nameofCurrentDomainUnhandledException}].", nameof(AppDomain.CurrentDomain.UnhandledException));
+		};
 
-        protected override async void OnExit(ExitEventArgs e)
-        {
-            base.OnExit(e);
-            using var host = Host;
-            await host.StopAsync();
-        }
+		TaskScheduler.UnobservedTaskException += (sender, e) =>
+		{
+			var logger = Services.GetRequiredService<ILogger<App>>();
+			logger.LogError(e.Exception, "Something went wrong in [{nameofCurrentDomainUnhandledException}].", nameof(TaskScheduler.UnobservedTaskException));
+		};
+	}
 
-        #endregion
-    }
+	protected override async void OnStartup(StartupEventArgs e)
+	{
+		IsDesignMode = false;
+		base.OnStartup(e);
+		await Host.StartAsync();
+		Services.GetRequiredService<MainWindow>().Show();
+	}
+
+	protected override async void OnExit(ExitEventArgs e)
+	{
+		base.OnExit(e);
+		using var host = Host;
+		await host.StopAsync();
+	}
+
+	#endregion
 }
 

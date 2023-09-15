@@ -1,17 +1,12 @@
 ﻿using DaemonsRunner.DAL.Repositories.Interfaces;
 using DaemonsRunner.DAL.Repositories;
-using DaemonsRunner.DAL.Storage.Interfaces;
-using DaemonsRunner.DAL.Storage;
-using DaemonsRunner.Domain.Models;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace DaemonsRunner.DAL.Extensions
+namespace DaemonsRunner.DAL.Extensions;
+
+public static class Registrator
 {
-    public static class Registrator
-    {
-        public static IServiceCollection AddDataAccessLayer(this IServiceCollection services) => services
-            .AddScoped<IFileRepository<PHPFileDTO>, FileRepository>()
-            .AddTransient<IStorageFactory, StorageFactory>()
-            ;
-    }
+    public static IServiceCollection AddDataAccessLayer(this IServiceCollection services) => services
+        .AddScoped<IScriptRepository, ScriptRepository>()
+        ;
 }

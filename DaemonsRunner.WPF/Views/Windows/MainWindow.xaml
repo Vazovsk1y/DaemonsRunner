@@ -9,40 +9,27 @@
         mc:Ignorable="d"
         Title="{Binding WindowTitle}" Height="450" Width="800">
     <DockPanel>
-        <Menu DockPanel.Dock="Top">
-            <MenuItem Header="File">
-                
-            </MenuItem>
-        </Menu>
-
         <StatusBar DockPanel.Dock="Bottom">
             <StatusBarItem>
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="Запущенные скрипты"/>
-                    <TextBlock Text="{Binding WorkSpaceViewModel.ScriptsExecutorsViewModels.Count}"/>
+                    <TextBlock Text="{Binding ScriptsPanelViewModel.RunningScripts.Count}"/>
                 </StackPanel>
             </StatusBarItem>
         </StatusBar>
 
         <Grid>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="1*"/>
                 <ColumnDefinition Width="3*"/>
                 <ColumnDefinition Width="2*"/>
             </Grid.ColumnDefinitions>
 
             <Grid Grid.Column="0">
-                <controls:FilesPanelControl 
-                    DataContext="{Binding FilesPanelViewModel}"
-                    d:DataContext="{d:DesignInstance vm:FilesPanelViewModel, IsDesignTimeCreatable=True}"/>
+                <controls:WorkSpaceControl 
+                    DataContext="{Binding ScriptsPanelViewModel}"/>
             </Grid>
 
             <Grid Grid.Column="1">
-                <controls:WorkSpaceControl 
-                    DataContext="{Binding WorkSpaceViewModel}"/>
-            </Grid>
-
-            <Grid Grid.Column="2">
                 <controls:NotificationPanelControl
                     DataContext="{Binding NotificationPanelViewModel}"/>
             </Grid>
