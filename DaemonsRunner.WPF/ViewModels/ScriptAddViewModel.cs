@@ -6,25 +6,24 @@ using DaemonsRunner.Infrastructure.Messages;
 using DaemonsRunner.ServiceLayer.Responses.DTOs;
 using DaemonsRunner.WPF.Views.Windows;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace DaemonsRunner.WPF.ViewModels;
 
 internal partial class ScriptAddViewModel : ObservableObject
 {
-	private readonly IUserDialog<ScriptAddWindow> _userDialog;
 	private readonly IDataBus _dataBus;
 	private readonly IFileDialog _fileDialog;
 	private readonly IScriptService _scriptService;
+	private readonly IUserDialog<ScriptAddWindow> _scriptAddDialog;
 
 	[ObservableProperty]
 	[NotifyCanExecuteChangedFor(nameof(AcceptCommand))]
-	private string _scriptTitle;
+	private string _scriptTitle = string.Empty;
 
 	[ObservableProperty]
 	[NotifyCanExecuteChangedFor(nameof(AcceptCommand))]
-	private string _scriptCommand;
+	private string _scriptCommand = string.Empty;
 
 	[ObservableProperty]
 	[NotifyPropertyChangedFor(nameof(ExecutableFileName))]
@@ -33,12 +32,12 @@ internal partial class ScriptAddViewModel : ObservableObject
 	public string? ExecutableFileName => ExecutableFile?.Name;
 
 	public ScriptAddViewModel(
-		IUserDialog<ScriptAddWindow> userDialog,
+		IUserDialog<ScriptAddWindow> scriptAddDialog,
 		IDataBus dataBus,
 		IFileDialog fileDialog,
 		IScriptService scriptService)
 	{
-		_userDialog = userDialog;
+		_scriptAddDialog = scriptAddDialog;
 		_dataBus = dataBus;
 		_fileDialog = fileDialog;
 		_scriptService = scriptService;
@@ -66,7 +65,7 @@ internal partial class ScriptAddViewModel : ObservableObject
 		}
 
 		_dataBus.Send(response.Description);
-		_userDialog.CloseDialog();
+		_scriptAddDialog.CloseDialog();
 	}
 
 	private bool OnCanAccept()
@@ -75,15 +74,15 @@ internal partial class ScriptAddViewModel : ObservableObject
 	}
 
 	[RelayCommand]
-	private void Cancel() => _userDialog.CloseDialog();
+	private void Cancel() => _scriptAddDialog.CloseDialog();
 
 	[RelayCommand]
 	private void SelectFile()
 	{
-		var response = _fileDialog.StartDialog(multiselect: false);
-		if (response.OperationStatus is not StatusCode.Fail)
+		var response = _fileDialog.SelectFile();
+		if (response.OperationStatus is StatusCode.Success)
 		{
-			ExecutableFile = response.Data.First();
+			ExecutableFile = response.Data;
 		}
 	}
 }

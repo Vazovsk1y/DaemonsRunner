@@ -56,7 +56,7 @@ public partial class App : Application
 	public static void ConfigureServices(HostBuilderContext host, IServiceCollection services) => services
 		.AddBuisnessLayer()
 		.AddDataAccessLayer()
-		.AddWPFLayer()
+		.AddWPF()
 		;
 
 	private static string GetSourceCodePath([CallerFilePath] string path = null) => string.IsNullOrWhiteSpace(path)

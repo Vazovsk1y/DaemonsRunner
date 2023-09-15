@@ -1,20 +1,15 @@
 ﻿using DaemonsRunner.BuisnessLayer.Services.Interfaces;
 using System.Collections.Generic;
 
-namespace DaemonsRunner.Infrastructure.Extensions
+namespace DaemonsRunner.Infrastructure.Extensions;
+
+internal static class IDataBusExtensions
 {
-    internal static class IDataBusExtensions
+    public static void SendAll<T>(this IDataBus dataBus, IEnumerable<T> messages)
     {
-        #region --Generic Extensions--
-
-        public static void SendAll<T>(this IDataBus dataBus, IEnumerable<T> messages)
+        foreach(var message in messages) 
         {
-            foreach(var message in messages) 
-            {
-                dataBus.Send(message);
-            }
+            dataBus.Send(message);
         }
-
-        #endregion
     }
 }

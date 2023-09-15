@@ -22,11 +22,11 @@ internal partial class ScriptsPanelViewModel : ObservableRecipient
 
     private readonly IDataBus _dataBus;
     private readonly IServiceScopeFactory _serviceScopeFactory;
-	private readonly IScriptExecutorViewModelFactory _scriptExecutorViewModelFactory;
-	private readonly IUserDialog<ScriptAddWindow> _userDialog;
-	private readonly ObservableCollection<ScriptExecutorViewModel> _runningScripts = new();
+	private readonly IUserDialog<ScriptAddWindow> _scriptAddDialog;
     private readonly ObservableCollection<ScriptViewModel> _scripts = new();
+	private readonly IScriptExecutorViewModelFactory _scriptExecutorViewModelFactory;
     private readonly ICollection<IDisposable> _subscriptions = new List<IDisposable>();
+	private readonly ObservableCollection<ScriptExecutorViewModel> _runningScripts = new();
     private bool? _isStartButtonEnable = null;
     private bool? _isStopButtonEnable = null;
 
@@ -108,7 +108,7 @@ internal partial class ScriptsPanelViewModel : ObservableRecipient
 		_subscriptions.Add(_dataBus.RegisterHandler<ScriptAddedMessage>(OnScriptAdded));
 		_serviceScopeFactory = serviceScopeFactory;
 		_scriptExecutorViewModelFactory = scriptExecutorViewModelFactory;
-		_userDialog = userDialog;
+		_scriptAddDialog = userDialog;
 	}
 
 
@@ -117,7 +117,7 @@ internal partial class ScriptsPanelViewModel : ObservableRecipient
 	#region --Commands--
 
 	[RelayCommand]
-	private void AddScript() => _userDialog.ShowDialog();
+	private void AddScript() => _scriptAddDialog.ShowDialog();
 
 	[RelayCommand(CanExecute = nameof(CanRemoveScript))]
     private async Task RemoveScript()
@@ -138,14 +138,14 @@ internal partial class ScriptsPanelViewModel : ObservableRecipient
     [RelayCommand(CanExecute = nameof(OnCanStartScripts))]
     private async Task StartScripts()
     {
-		if (StartScriptsCommand.IsRunning)
+		if (StopScriptsCommand.IsRunning || StartScriptsCommand.IsRunning)
 		{
 			return;
 		}
 
 		IsStartButtonEnable = false;
-		var scriptsToStart = Scripts.Where(e => e.IsReadyToStart).Select(e => e.ScriptId);
 
+        var scriptsToStart = Scripts.Where(e => e.IsSelected).Select(e => e.ScriptId);
 		var scope = _serviceScopeFactory.CreateScope();
 		var service = scope.ServiceProvider.GetRequiredService<IScriptService>();
 
@@ -175,7 +175,7 @@ internal partial class ScriptsPanelViewModel : ObservableRecipient
     [RelayCommand(CanExecute = nameof(OnCanStopScripts))]
     private async Task StopScripts()
     {
-		if (StartScriptsCommand.IsRunning)
+		if (StopScriptsCommand.IsRunning || StartScriptsCommand.IsRunning)
 		{
 			return;
 		}
@@ -205,21 +205,22 @@ internal partial class ScriptsPanelViewModel : ObservableRecipient
 
 	private async void OnScriptExited(ScriptExitedMessage message)
 	{
-		switch (message.ExitType)
+		if (message.ExitedByTaskManager)
 		{
-			case ExitType.ByTaskManager:
-				{
-					_dataBus.Send($"[{message.Sender.Title}] was killed by task manager.");
-				}
-				break;
-			case ExitType.ByButtonInsideApp:
-				{
-					_dataBus.Send($"[{message.Sender.Title}] was successfully stopped.");
-				}
-				break;
-		}
+            _dataBus.Send($"[{message.Sender.Title}] was killed by task manager.");
+            await App.Current.Dispatcher.InvokeAsync(() =>
+            {
+                RunningScripts.Remove(message.Sender);
+                message.Sender.Dispose();
 
-		await App.Current.Dispatcher.InvokeAsync(() =>
+                IsStopButtonEnable = null;
+                IsStartButtonEnable = null;
+            });
+			return;
+        }
+
+        _dataBus.Send($"[{message.Sender.Title}] was successfully stopped.");
+        await App.Current.Dispatcher.InvokeAsync(() =>
 		{
 			message.Sender.Stop();
 			RunningScripts.Remove(message.Sender);
@@ -228,9 +229,9 @@ internal partial class ScriptsPanelViewModel : ObservableRecipient
 			IsStopButtonEnable = null;
 			IsStartButtonEnable = null;
 		});
-	}
+    }
 
-	private async void OnScriptAdded(ScriptAddedMessage message)
+    private async void OnScriptAdded(ScriptAddedMessage message)
 	{
 		await App.Current.Dispatcher.InvokeAsync(() => Scripts.Add(message.ScriptViewModel));
 	}

@@ -12,13 +12,15 @@ namespace DaemonsRunner.Infrastructure.Extensions;
 
 internal static class Registrator
 {
-    public static IServiceCollection AddWPFLayer(this IServiceCollection services) => services
+    public static IServiceCollection AddWPF(this IServiceCollection services) => services
         .AddSingleton<IScriptExecutorViewModelFactory, ScriptExecutorViewModelFactory>()
         .AddSingleton<MainWindowViewModel>()
         .AddSingleton<ScriptsPanelViewModel>()
         .AddSingleton<NotificationPanelViewModel>()
         .AddTransient<IFileDialog, WPFFileDialogService>()
         .AddSingleton<IStorage, Storage>(e => new Storage(App.AssociatedFolderInAppDataPath))
+        .AddScoped<ScriptAddViewModel>()
+        .AddSingleton(typeof(IUserDialog<>), typeof(BaseUserDialogService<>))
         .AddSingleton(s =>
         {
             var viewModel = s.GetRequiredService<MainWindowViewModel>();
@@ -26,7 +28,6 @@ internal static class Registrator
 
             return window;
         })
-        .AddScoped<ScriptAddViewModel>()
         .AddTransient(s =>
         {
 			var viewModel = s.GetRequiredService<ScriptAddViewModel>();
@@ -34,6 +35,5 @@ internal static class Registrator
 
 			return window;
 		})
-        .AddSingleton(typeof(IUserDialog<>), typeof(BaseUserDialogService<>))
         ;
 }

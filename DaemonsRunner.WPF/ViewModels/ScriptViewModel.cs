@@ -8,7 +8,7 @@ internal partial class ScriptViewModel : ObservableObject
 	public required ScriptId ScriptId { get; init; }
 
 	[ObservableProperty]
-	private bool _isReadyToStart;
+	private bool _IsSelected;
 
 	[ObservableProperty]
 	private string _title = null!;

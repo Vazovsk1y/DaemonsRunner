@@ -40,6 +40,7 @@
                                 <Setter Property="BorderBrush" Value="Black"/>
                                 <Setter Property="BorderThickness" Value="2"/>
                                 <Setter Property="Margin" Value="0,5,0,5"/>
+                                <Setter Property="IsSelected" Value="{Binding Mode=TwoWay, Path=IsSelected}"/>
                             </Style>
                         </ListBox.ItemContainerStyle>
                         <ListBox.ItemTemplate>
@@ -53,7 +54,6 @@
                                                    Text="{Binding ExecutableFileViewModel.Name, StringFormat='Исполняемый файл: {0}'}"/>
                                     <TextBlock Foreground="Coral"
                                                    Text="{Binding ExecutableFileViewModel.Path}"/>
-                                    <CheckBox Content="ReadyToStart" IsChecked="{Binding IsReadyToStart}"/>
                                 </StackPanel>
                             </DataTemplate>
                         </ListBox.ItemTemplate>

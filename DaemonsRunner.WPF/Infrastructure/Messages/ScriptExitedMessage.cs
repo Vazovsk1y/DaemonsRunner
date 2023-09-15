@@ -2,10 +2,4 @@
 
 namespace DaemonsRunner.Infrastructure.Messages;
 
-internal enum ExitType
-{
-    ByTaskManager,
-    ByButtonInsideApp
-}
-
-internal record ScriptExitedMessage(ScriptExecutorViewModel Sender, ExitType ExitType);
+internal record ScriptExitedMessage(ScriptExecutorViewModel Sender, bool ExitedByTaskManager = false);

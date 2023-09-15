@@ -13,6 +13,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="ViewModels\Base\**" />
+    <EmbeddedResource Remove="ViewModels\Base\**" />
+    <None Remove="ViewModels\Base\**" />
+    <Page Remove="ViewModels\Base\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.1" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.1" />
@@ -21,10 +28,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DaemonsRunner.ServiceLayer\DaemonsRunner.ServiceLayer.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="ViewModels\Base\" />
   </ItemGroup>
 
 </Project>
