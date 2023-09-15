@@ -1,15 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace DaemonsRunner.Domain.Tests.Infrastructure.EventSpies;
 
-namespace DaemonsRunner.Domain.Tests.Infrastructure.EventSpies
+internal abstract class BaseEventSpy
 {
-    internal abstract class BaseEventSpy
-    {
-        public bool EventHandled { get; protected set; }
+    public bool EventHandled { get; protected set; }
 
-        public int EventWaitTimeMs => 100;
-    }
+    public static int EventWaitTimeMs => 100;
 }

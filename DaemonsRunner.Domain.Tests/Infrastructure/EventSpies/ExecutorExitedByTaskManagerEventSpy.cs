@@ -1,10 +1,9 @@
-﻿namespace DaemonsRunner.Domain.Tests.Infrastructure.EventSpies
+﻿namespace DaemonsRunner.Domain.Tests.Infrastructure.EventSpies;
+
+internal class ExecutorExitedByTaskManagerEventSpy : BaseEventSpy
 {
-    internal class ExecutorExitedByTaskManagerEventSpy : BaseEventSpy
+    public void HandleEvent(object? sender, EventArgs e)
     {
-        public void HandleEvent(object? sender, EventArgs e)
-        {
-            EventHandled = true;
-        }
+        EventHandled = true;
     }
 }
