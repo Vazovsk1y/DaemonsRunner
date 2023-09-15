@@ -1,4 +1,4 @@
-name: "Manual Build DemonsRunner"
+name: "Manual Build DaemonsRunner"
 
 on:
   workflow_dispatch:
