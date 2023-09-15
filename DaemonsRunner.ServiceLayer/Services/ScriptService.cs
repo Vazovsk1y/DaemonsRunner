@@ -31,7 +31,7 @@ public class ScriptService : IScriptService
 	public Task<DataResponse<IEnumerable<ScriptDTO>>> GetAllAsync(CancellationToken cancellationToken = default)
 	{
 		var result = _scriptRepository.GetAll().Select(e => e.ToDTO());
-		string description = $"[{result.Count()}] were successfully received.";
+		string description = $"[{result.Count()}] scripts were successfully received.";
 		return Task.FromResult(Response.Success(result, description));
 	}
 
@@ -73,6 +73,7 @@ public class ScriptService : IScriptService
 		{
 			executor.ExecuteCommand();
 		}
+
 		return Task.FromResult(Response.Success(executor));
 	}
 }

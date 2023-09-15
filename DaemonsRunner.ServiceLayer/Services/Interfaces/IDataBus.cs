@@ -1,9 +1,8 @@
-﻿namespace DaemonsRunner.BuisnessLayer.Services.Interfaces
-{
-    public interface IDataBus
-    {
-        IDisposable RegisterHandler<T>(Action<T> handler);
+﻿namespace DaemonsRunner.BuisnessLayer.Services.Interfaces;
 
-        void Send<T>(T message);
-    }
+public interface IDataBus
+{
+    IDisposable RegisterHandler<T>(Action<T> handler);
+
+    void Send<T>(T message);
 }

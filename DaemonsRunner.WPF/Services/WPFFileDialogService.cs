@@ -1,6 +1,5 @@
 ﻿using Microsoft.Win32;
 using DaemonsRunner.BuisnessLayer.Services.Interfaces;
-using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.Linq;
 using DaemonsRunner.BuisnessLayer.Responses;
@@ -10,48 +9,44 @@ namespace DaemonsRunner.Services;
 
 public class WPFFileDialogService : IFileDialog
 {
-	private readonly ILogger<WPFFileDialogService> _logger;
+    public DataResponse<FileInfo> SelectFile(string filter = "", string title = "Choose file:")
+    {
+        var fileDialog = new OpenFileDialog
+        {
+            Multiselect = false,
+            Filter = filter,
+            Title = title,
+            RestoreDirectory = true,
+        };
 
-	public WPFFileDialogService(ILogger<WPFFileDialogService> logger)
-	{
-		_logger = logger;
-	}
+        var dialogResult = fileDialog.ShowDialog();
 
-	public DataResponse<IEnumerable<FileInfo>> StartDialog(
-	string filter = "",
-	string title = "Choose files:",
-	bool multiselect = true)
-	{
-		var fileDialog = new OpenFileDialog
-		{
-			Multiselect = multiselect,
-			Filter = filter,
-			Title = title,
-			RestoreDirectory = true,
-		};
+        if (dialogResult is bool result && result is true)
+        {
+            return Response.Success(new FileInfo(fileDialog.FileName));
+        }
 
-		var dialogResult = fileDialog.ShowDialog();
+        return Response.Fail<FileInfo>("No files were selected.");
+    }
 
-		if (dialogResult is bool result && result is true)
-		{
-			var data = GetFileInfos(fileDialog);
-			return Response.Success(data, $"[{data.Count()}] files were selected.");
-		}
+    public DataResponse<IEnumerable<FileInfo>> SelectFiles(string filter = "", string title = "Choose files:")
+    {
+        var fileDialog = new OpenFileDialog
+        {
+            Multiselect = true,
+            Filter = filter,
+            Title = title,
+            RestoreDirectory = true,
+        };
 
-		return Response.Fail<IEnumerable<FileInfo>>("No files were selected.");
-	}
+        var dialogResult = fileDialog.ShowDialog();
 
-	private IEnumerable<FileInfo> GetFileInfos(OpenFileDialog fileDialog)
-	{
-		var fullFilesPath = fileDialog.FileNames;
-		List<FileInfo> files = new();
+        if (dialogResult is bool result && result is true)
+        {
+            var data = fileDialog.FileNames.Select(e => new FileInfo(e));
+            return Response.Success(data, $"[{data.Count()}] files were selected.");
+        }
 
-		for (int i = 0; i < fullFilesPath.Length; i++)
-		{
-			files.Add(new FileInfo(fullFilesPath[i]));
-		}
-
-		_logger.LogInformation("Files count in selected files [{demonsCount}]", files.Count);
-		return files;
-	}
+        return Response.Fail<IEnumerable<FileInfo>>("No files were selected.");
+    }
 }
