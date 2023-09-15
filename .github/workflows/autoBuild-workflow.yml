@@ -1,4 +1,4 @@
-name: "Build DemonsRunner"
+name: "Build DaemonsRunner"
 
 on:
   push:
