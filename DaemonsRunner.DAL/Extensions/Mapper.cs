@@ -1,4 +1,4 @@
-﻿using DaemonsRunner.DAL.Repositories;
+﻿using DaemonsRunner.DAL.DataModels;
 using DaemonsRunner.Domain.Models;
 using System.Reflection;
 
