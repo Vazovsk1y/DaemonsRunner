@@ -1,0 +1,26 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <Style x:Key="BaseTitlesTextBlocks" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="{StaticResource BaseTitlesFontSize}"/>
+        <Setter Property="FontFamily" Value="\Views\Fonts\Montserrat-VariableFont_wght.ttf#Montserrat"/>
+    </Style>
+
+    <Style x:Key="BaseElementsTextBlocks" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="{StaticResource BaseElementsFontSize}"/>
+        <Setter Property="FontFamily" Value="\Views\Fonts\Montserrat-VariableFont_wght.ttf#Montserrat"/>
+    </Style>
+
+    <Style x:Key="BaseNotificationsTextBlocks" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="{StaticResource NotificationsFontSize}"/>
+        <Setter Property="FontFamily" Value="\Views\Fonts\Montserrat-VariableFont_wght.ttf#Montserrat"/>
+    </Style>
+
+    <!--How to include fonts correct, path string like that-->
+    <!--<Setter Property="FontFamily" Value="\Views\Fonts\{*optional* FONT_FILE.NAME.ttf/otf}#FONT_NAME"/>-->
+    <!--Set font file properties 
+    Build Action: Content 
+    Copy to output directory: Copy if newer
+    -->
+
+</ResourceDictionary> 
