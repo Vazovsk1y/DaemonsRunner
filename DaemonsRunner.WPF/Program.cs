@@ -29,6 +29,7 @@ internal class Program
 
 		App app = new();
 		app.StartGlobalExceptionsHandling();
+		app.InitializeComponent();
 		app.Run();
 	}
 

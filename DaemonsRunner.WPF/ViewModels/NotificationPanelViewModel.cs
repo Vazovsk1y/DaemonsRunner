@@ -4,10 +4,11 @@ using DaemonsRunner.BuisnessLayer.Services.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Windows.Input;
 
 namespace DaemonsRunner.ViewModels;
 
-internal class NotificationPanelViewModel : ObservableObject
+internal partial class NotificationPanelViewModel : ObservableObject
 {
 	#region --Fields--
 
@@ -31,16 +32,17 @@ internal class NotificationPanelViewModel : ObservableObject
 	{
 		_dataBus = dataBus;
 		_subscriptions.Add(_dataBus.RegisterHandler<string>(OnMessageReceived));
-		_notifications.CollectionChanged += (_, _) => ClearNotificationsCommand.NotifyCanExecuteChanged();
+		Notifications.CollectionChanged += (_, _) => ClearNotificationsCommand.NotifyCanExecuteChanged();
 	}
 
 	#endregion
 
 	#region --Commands--
 
-	public IRelayCommand ClearNotificationsCommand => new RelayCommand(
-		Notifications.Clear,
-		() => Notifications.Count > 0);
+	[RelayCommand(CanExecute = nameof(CanClearNotifications))]
+	private void ClearNotifications() => Notifications.Clear();
+
+	private bool CanClearNotifications() => Notifications.Count > 0;
 
 	#endregion
 
