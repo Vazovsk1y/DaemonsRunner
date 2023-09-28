@@ -29,7 +29,7 @@ internal partial class ScriptAddViewModel : ObservableObject
 	[NotifyPropertyChangedFor(nameof(ExecutableFileName))]
 	private FileInfo? _executableFile;
 
-	public string? ExecutableFileName => ExecutableFile?.Name;
+	public string? ExecutableFileName => ExecutableFile?.Name ?? "*Имя исполняемого файла*";
 
 	public ScriptAddViewModel(
 		IUserDialog<ScriptAddWindow> scriptAddDialog,
