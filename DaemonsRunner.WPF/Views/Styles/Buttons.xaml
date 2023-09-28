@@ -53,6 +53,13 @@
                 <Setter Property="Background" Value="{StaticResource BaseFontBrush}"/>
                 <Setter Property="TextElement.Foreground" Value="{StaticResource BaseBlocksBackgroundBrush}"/>
             </Trigger>
+
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="Background" Value="#c6c6c6"/>
+                <Setter Property="TextElement.Foreground" Value="#828282"/>
+                <Setter Property="BorderThickness" Value="0"/>
+                <Setter Property="BorderBrush" Value="{x:Null}"/>
+            </Trigger>
         </Style.Triggers>
     </Style>
 

@@ -36,13 +36,14 @@ internal partial class ScriptsPanelViewModel : ObservableRecipient
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(RemoveScriptCommand))]
+	[NotifyCanExecuteChangedFor(nameof(StartScriptsCommand))]
 	private ScriptViewModel? _selectedScript;
 
 	public bool? IsStartButtonEnable
     {
         get
         {
-            bool defaultCondition = Scripts.Count > 0 &&
+            bool defaultCondition = Scripts.Where(e => e.IsSelected).Any() &&
                   RunningScripts.Count == 0;
 
             return _isStartButtonEnable is bool condition

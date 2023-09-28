@@ -120,10 +120,10 @@
             </Border>
             <UniformGrid Grid.Row="1" Margin="0,5,0,0" Rows="1">
                 <Button Margin="0, 5, 5, 5" Command="{Binding AddScriptCommand}" Style="{StaticResource DoButtonStyle}">
-                    <TextBlock Style="{StaticResource BaseElementsTextBlocks}" Text="Добавить"/>
+                    <TextBlock Style="{StaticResource BaseTitlesTextBlocks}" Text="Добавить"/>
                 </Button>
                 <Button Margin="5,5,0,5" Command="{Binding RemoveScriptCommand}" Style="{StaticResource UndoButtonStyle}">
-                    <TextBlock Style="{StaticResource BaseElementsTextBlocks}" Text="Удалить"/>
+                    <TextBlock Style="{StaticResource BaseTitlesTextBlocks}" Text="Удалить"/>
                 </Button>
             </UniformGrid>
         </Grid>
@@ -241,10 +241,10 @@
             </Border>
             <UniformGrid Grid.Row="1" Margin="0,5,0,0" Rows="1">
                 <Button Margin="0, 5, 5, 5" Command="{Binding StartScriptsCommand}" Style="{StaticResource DoButtonStyle}">
-                    <TextBlock Style="{StaticResource BaseElementsTextBlocks}" Text="Запустить"/>
+                    <TextBlock Style="{StaticResource BaseTitlesTextBlocks}" Text="Запустить"/>
                 </Button>
                 <Button Margin="5,5,0,5" Command="{Binding StopScriptsCommand}" Style="{StaticResource UndoButtonStyle}">
-                    <TextBlock Style="{StaticResource BaseElementsTextBlocks}" Text="Остановить"/>
+                    <TextBlock Style="{StaticResource BaseTitlesTextBlocks}" Text="Остановить"/>
                 </Button>
             </UniformGrid>
         </Grid>
