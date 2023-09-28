@@ -17,15 +17,7 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="3.5*"/>
                 <ColumnDefinition Width="auto"/>
-                <ColumnDefinition Width="auto"/>
             </Grid.ColumnDefinitions>
-            <GridSplitter
-            Width="10"
-            Grid.Column="1"
-            HorizontalAlignment="Center"
-            VerticalAlignment="Stretch"
-            BorderThickness="0"
-            ShowsPreview="False"/>
             <Grid Grid.Column="0">
                 <controls:WorkSpaceControl Margin="5, 0, 0, 0" DataContext="{Binding ScriptsPanelViewModel}"/>
             </Grid>
