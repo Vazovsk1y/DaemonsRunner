@@ -25,7 +25,7 @@ public class ScriptService : IScriptService
 			return Task.FromResult(Response.Fail("Script with passed id is not exists."));
 		}
 		
-		return Task.FromResult(Response.Success());
+		return Task.FromResult(Response.Success($"Script was successfully deleted."));
 	}
 
 	public Task<DataResponse<IEnumerable<ScriptDTO>>> GetAllAsync(CancellationToken cancellationToken = default)

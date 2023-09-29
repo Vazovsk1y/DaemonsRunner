@@ -1,31 +1,40 @@
-﻿<UserControl x:Class="DaemonsRunner.Views.Controls.WorkSpaceControl"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:viewmodels="clr-namespace:DaemonsRunner.ViewModels"
-             xmlns:vms="clr-namespace:DaemonsRunner.WPF.ViewModels"
-             d:DataContext="{d:DesignInstance Type=viewmodels:ScriptsPanelViewModel}"
-             mc:Ignorable="d" 
-             Background="Transparent"
-             d:DesignHeight="450" d:DesignWidth="800">
+﻿<UserControl
+   x:Class="DaemonsRunner.Views.Controls.WorkSpaceControl"
+   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+   xmlns:conv="clr-namespace:DaemonsRunner.WPF.Infrastructure.Converters"
+   xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+   xmlns:viewmodels="clr-namespace:DaemonsRunner.ViewModels"
+   xmlns:vms="clr-namespace:DaemonsRunner.WPF.ViewModels"
+   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+   Background="Transparent"
+   d:DataContext="{d:DesignInstance Type=viewmodels:ScriptsPanelViewModel}"
+   d:DesignHeight="450"
+   d:DesignWidth="800"
+   mc:Ignorable="d">
+
     <UserControl.Resources>
+
         <Style x:Key="WorkSpaceListBoxItemStyle" TargetType="{x:Type ListBoxItem}">
             <Setter Property="Background" Value="{StaticResource BaseNONActiveElementsBrush}"/>
             <Setter Property="Margin" Value="5"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="ListBoxItem">
-                        <Border Background="{TemplateBinding Background}"
-                                                BorderBrush="{TemplateBinding BorderBrush}"
-                                                BorderThickness="{TemplateBinding BorderThickness}"
-                                                CornerRadius="{StaticResource ListBoxItemsContainersRoundingAngle}">
-                            <ContentPresenter />
+                        <Border
+                     Background="{TemplateBinding Background}"
+                     BorderBrush="{TemplateBinding BorderBrush}"
+                     BorderThickness="{TemplateBinding BorderThickness}"
+                     CornerRadius="{StaticResource ListBoxItemsContainersRoundingAngle}">
+                            <ContentPresenter/>
                         </Border>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
         </Style>
+
+        <conv:NullToVisibilityConverter x:Key="NullToVisibilityConverter"/>
+        <conv:CollectionCountToVisibilityConverter x:Key="CollectionCountToVisiblityConverter"/>
     </UserControl.Resources>
 
     <Grid>
@@ -36,110 +45,109 @@
         </Grid.ColumnDefinitions>
 
         <Grid Grid.Column="0">
-
             <Grid.RowDefinitions>
                 <RowDefinition Height="3*"/>
                 <RowDefinition Height="0.3*"/>
             </Grid.RowDefinitions>
 
-            <Border Grid.Row="0" 
-                    Background="{StaticResource BaseBlocksBackgroundBrush}"
-                    CornerRadius="{StaticResource BaseBlocksRoundingAngle}">
-
+            <Border Grid.Row="0" Background="{StaticResource BaseBlocksBackgroundBrush}" CornerRadius="{StaticResource BaseBlocksRoundingAngle}">
                 <DockPanel>
-                    <TextBlock Text="Панель скриптов"
-                        DockPanel.Dock="Top"
-                        Margin="10"
-                        Style="{StaticResource BaseTitlesTextBlocks}"/>
 
-                    <ListBox DockPanel.Dock="Top"
-                             ItemsSource="{Binding Scripts}"
-                             SelectedItem="{Binding SelectedScript}">
+                    <StackPanel DockPanel.Dock="Top">
 
+                        <Rectangle
+                  Height="3"
+                  Margin="10,10,10,0"
+                  DockPanel.Dock="Top"
+                  Fill="Black">
+                            <Rectangle.RadiusX>2</Rectangle.RadiusX>
+                            <Rectangle.RadiusY>2</Rectangle.RadiusY>
+                        </Rectangle>
+
+                        <TextBlock
+                  HorizontalAlignment="Center"
+                  Margin="10"
+                  DockPanel.Dock="Top"
+                  Style="{StaticResource BaseTitlesTextBlocks}"
+                  Text="Панель скриптов"/>
+
+                        <Rectangle
+                  Height="3"
+                  Margin="10,0,10,5"
+                  DockPanel.Dock="Top"
+                  Fill="Black">
+                            <Rectangle.RadiusX>2</Rectangle.RadiusX>
+                            <Rectangle.RadiusY>2</Rectangle.RadiusY>
+                        </Rectangle>
+                    </StackPanel>
+
+                    <ListBox
+                  DockPanel.Dock="Top"
+                  ItemsSource="{Binding Scripts}"
+                  SelectedItem="{Binding SelectedScript}"
+                  SelectionMode="Multiple">
                         <ListBox.Style>
-                            <Style TargetType="ListBox" BasedOn="{StaticResource BaseListBox}"/>
+                            <Style BasedOn="{StaticResource BaseListBox}" TargetType="ListBox"/>
                         </ListBox.Style>
 
                         <ListBox.ItemContainerStyle>
-                            <Style TargetType="{x:Type ListBoxItem}"
-                                   BasedOn="{StaticResource WorkSpaceListBoxItemStyle}">
-                                <Setter Property="MinHeight" Value="125"/>
+                            <Style BasedOn="{StaticResource WorkSpaceListBoxItemStyle}" TargetType="{x:Type ListBoxItem}">
                                 <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}"/>
+                                <Setter Property="BorderBrush" Value="{StaticResource BaseFontBrush}"/>
+                                <Setter Property="BorderThickness" Value="2"/>
+                                <Style.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Background" Value="#77000000"/>
+                                        <Setter Property="TextElement.Foreground" Value="{StaticResource BaseBlocksBackgroundBrush}"/>
+                                    </Trigger>
+                                    <Trigger Property="IsMouseOver" Value="False">
+                                        <Setter Property="TextElement.Foreground" Value="{StaticResource BaseFontBrush}"/>
+                                    </Trigger>
+                                    <Trigger Property="IsSelected" Value="True">
+                                        <Setter Property="Background" Value="{StaticResource SelectedElementBrush}"/>
+                                        <Setter Property="TextElement.Foreground" Value="{StaticResource BaseBlocksBackgroundBrush}"/>
+                                    </Trigger>
+                                </Style.Triggers>
                             </Style>
                         </ListBox.ItemContainerStyle>
 
                         <ListBox.ItemTemplate>
                             <DataTemplate DataType="{x:Type vms:ScriptViewModel}">
-                                <DockPanel Margin="10">
-                                    <TextBlock DockPanel.Dock="Top"
-                                              Text="{Binding Title}"
-                                              Style="{StaticResource BaseElementsTextBlocks}"
-                                              Foreground="{StaticResource TextInsideBlocksBrush}"/>
-
-
-
-                                    <StackPanel VerticalAlignment="Center">
-
-                                        <StackPanel Orientation="Horizontal">
-                                            <TextBlock Text="Команда: "
-                                                       Style="{StaticResource BaseNotificationsTextBlocks}"
-                                                       Foreground="{StaticResource BaseFontBrush}"/>
-                                            <TextBlock Text="{Binding Command}"
-                                                       Style="{StaticResource BaseNotificationsTextBlocks}"
-                                                       Foreground="{StaticResource TextInsideBlocksBrush}"/>
+                                <DockPanel Margin="10" Background="Transparent">
+                                    <TextBlock DockPanel.Dock="Top" Style="{StaticResource BaseElementsTextBlocks}" Text="{Binding Title}">
+                                    </TextBlock>
+                                    <StackPanel VerticalAlignment="Center" Background="Transparent">
+                                        <StackPanel Background="Transparent" Orientation="Horizontal">
+                                            <TextBlock Style="{StaticResource BaseNotificationsTextBlocks}" Text="Команда: "/>
+                                            <TextBlock Style="{StaticResource BaseNotificationsTextBlocks}" Text="{Binding Command}"/>
                                         </StackPanel>
-
-                                        <StackPanel Orientation="Vertical" Margin="0, 5, 0, 0">
-                                            <TextBlock Text="Исполняемый файл: "
-                                                       Style="{StaticResource BaseElementsTextBlocks}"
-                                                       Foreground="{StaticResource BaseFontBrush}"/>
-
-                                            <StackPanel Orientation="Horizontal">
-                                                <TextBlock Text="Имя: "
-                                                      Style="{StaticResource BaseNotificationsTextBlocks}"
-                                                      Foreground="{StaticResource BaseFontBrush}"/>
-                                                <TextBlock Text="{Binding ExecutableFileViewModel.Name}"
-                                                     Style="{StaticResource BaseNotificationsTextBlocks}"
-                                                     Foreground="{StaticResource TextInsideBlocksBrush}"/>
+                                        <StackPanel Margin="0, 5, 0, 0" Orientation="Vertical" Visibility="{Binding ExecutableFileViewModel, Converter={x:Static conv:NullToVisibilityConverter.Instance}}">
+                                            <TextBlock Style="{StaticResource BaseNotificationsTextBlocks}" Text="Исполняемый файл: "/>
+                                            <StackPanel Orientation="Horizontal" Margin="5, 0, 0, 0">
+                                                <TextBlock Style="{StaticResource BaseNotificationsTextBlocks}" Text="Имя: "/>
+                                                <TextBlock Style="{StaticResource BaseNotificationsTextBlocks}" Text="{Binding ExecutableFileViewModel.Name}"/>
                                             </StackPanel>
-
-                                            <StackPanel Orientation="Horizontal">
-                                                <TextBlock Text="Путь: "
-                                                            Style="{StaticResource BaseNotificationsTextBlocks}"
-                                                            Foreground="{StaticResource BaseFontBrush}"/>
-                                                <TextBlock Text="{Binding ExecutableFileViewModel.Path}"
-                                                           Style="{StaticResource BaseNotificationsTextBlocks}"
-                                                           Foreground="{StaticResource TextInsideBlocksBrush}"/>
+                                            <StackPanel Orientation="Horizontal" Margin="5, 0, 0, 0">
+                                                <TextBlock Style="{StaticResource BaseNotificationsTextBlocks}" Text="Путь: "/>
+                                                <TextBlock Style="{StaticResource BaseNotificationsTextBlocks}" Text="{Binding ExecutableFileViewModel.Path}"/>
                                             </StackPanel>
-
                                         </StackPanel>
-                                        
                                     </StackPanel>
-
                                 </DockPanel>
                             </DataTemplate>
                         </ListBox.ItemTemplate>
+
                     </ListBox>
+
                 </DockPanel>
             </Border>
 
-            <UniformGrid Grid.Row="1" 
-                         Rows="1"
-                         Margin="0,5,0,0">
-                <Button Background="{StaticResource BaseBlocksBackgroundBrush}"
-                                    Margin="0, 5, 5, 5"
-                                    Style="{StaticResource BaseRoundedButton}"
-                                    Command="{Binding AddScriptCommand}">
-                    <TextBlock Text="Добавить" 
-                                       Style="{StaticResource BaseElementsTextBlocks}"/>
+            <UniformGrid Grid.Row="1" Margin="0,5,0,0" Rows="1">
+                <Button Margin="0, 5, 5, 5" Command="{Binding AddScriptCommand}" Style="{StaticResource DoButtonStyle}">
+                    <TextBlock Style="{StaticResource BaseTitlesTextBlocks}" Text="Добавить"/>
                 </Button>
-
-                <Button Background="{StaticResource BaseBlocksBackgroundBrush}"
-                                    Margin="5,5,0,5"
-                                    Style="{StaticResource BaseRoundedButton}"
-                                    Command="{Binding RemoveScriptCommand}">
-                    <TextBlock Text="Удалить" 
-                                       Style="{StaticResource BaseElementsTextBlocks}"/>
+                <Button Margin="5,5,0,5" Command="{Binding RemoveScriptCommand}" Style="{StaticResource UndoButtonStyle}">
+                    <TextBlock Style="{StaticResource BaseTitlesTextBlocks}" Text="Удалить"/>
                 </Button>
             </UniformGrid>
         </Grid>
@@ -152,129 +160,131 @@
                 <RowDefinition Height="0.3*"/>
             </Grid.RowDefinitions>
 
-            <Border Grid.Row="0" 
-                    Background="{StaticResource BaseBlocksBackgroundBrush}"
-                    CornerRadius="{StaticResource BaseBlocksRoundingAngle}">
+            <Border Grid.Row="0" Background="{StaticResource BaseBlocksBackgroundBrush}" CornerRadius="{StaticResource BaseBlocksRoundingAngle}">
                 <DockPanel>
-                    <TextBlock DockPanel.Dock="Top"
-                               Text="Терминал" 
-                               Margin="10"
-                               Style="{StaticResource BaseTitlesTextBlocks}"/>
 
-                    <ListBox ItemsSource="{Binding RunningScripts}"
-                             ItemContainerStyle="{StaticResource WorkSpaceListBoxItemStyle}">
+                    <StackPanel DockPanel.Dock="Top">
+                        <Rectangle
+                     Height="3"
+                     Margin="10,10,10,0"
+                     DockPanel.Dock="Top"
+                     Fill="Black">
+                            <Rectangle.RadiusX>2</Rectangle.RadiusX>
+                            <Rectangle.RadiusY>2</Rectangle.RadiusY>
+                        </Rectangle>
 
+                        <TextBlock
+                     HorizontalAlignment="Center"
+                     Margin="10"
+                     Style="{StaticResource BaseTitlesTextBlocks}"
+                     Text="Терминал"/>
+
+                        <Rectangle Height="3" Margin="10,0,10,5" Fill="Black">
+                            <Rectangle.RadiusX>2</Rectangle.RadiusX>
+                            <Rectangle.RadiusY>2</Rectangle.RadiusY>
+                        </Rectangle>
+                    </StackPanel>
+
+                    <ListBox DockPanel.Dock="Top" ItemsSource="{Binding RunningScripts}">
+                        <ListBox.ItemContainerStyle>
+                            <Style BasedOn="{StaticResource WorkSpaceListBoxItemStyle}" TargetType="{x:Type ListBoxItem}">
+                                <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}"/>
+                                <Setter Property="BorderBrush" Value="{StaticResource BaseFontBrush}"/>
+                                <Setter Property="BorderThickness" Value="2"/>
+                                <Style.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="False">
+                                        <Setter Property="Background" Value="{StaticResource BaseNONActiveElementsBrush}"/>
+                                        <Setter Property="TextElement.Foreground" Value="{StaticResource BaseFontBrush}"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ListBox.ItemContainerStyle>
                         <ListBox.Style>
-                            <Style TargetType="ListBox" BasedOn="{StaticResource BaseListBox}"/>
+                            <Style BasedOn="{StaticResource BaseListBox}" TargetType="ListBox"/>
                         </ListBox.Style>
-
                         <ListBox.ItemTemplate>
                             <DataTemplate DataType="{x:Type viewmodels:ScriptExecutorViewModel}">
                                 <StackPanel>
-
-                                    <Grid Margin="3">
+                                    <TextBlock
+                                 HorizontalAlignment="Left"
+                                 Margin="20,5"
+                                 VerticalAlignment="Center"
+                                 Style="{StaticResource BaseTitlesTextBlocks}"
+                                 Text="{Binding Title}"/>
+                                    <Grid>
                                         <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="auto"/>
                                             <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="auto"/>
                                         </Grid.ColumnDefinitions>
-
-                                        <TextBlock Style="{StaticResource BaseTitlesTextBlocks}"
-                                            Grid.Column="0"
-                                            FontSize="{StaticResource BaseElementsFontSize}"
-                                            Text="{Binding Title}"
-                                            Foreground="{StaticResource TextInsideBlocksBrush}"
-                                            Margin="10,5"
-                                            HorizontalAlignment="Left" 
-                                            VerticalAlignment="Center"/>
-
-                                        <TextBlock Text="{Binding OutputMessages.Count, StringFormat='Сообщения: {0}'}" 
-                                                   Grid.Column="1"
-                                                   Foreground="{StaticResource TextInsideBlocksBrush}"
-                                                   Margin="0, 5, 10, 0"
-                                                   Style="{StaticResource BaseNotificationsTextBlocks}"
-                                                   HorizontalAlignment="Right" 
-                                                   VerticalAlignment="Center"/>
+                                        <TextBlock
+                                    Grid.Column="1"
+                                    HorizontalAlignment="Left"
+                                    Margin="0, 0, 20, 0"
+                                    Style="{StaticResource BaseElementsTextBlocks}"
+                                    Text="{Binding OutputMessages.Count, StringFormat='Сообщения: {0}'}"/>
+                                        <Expander Grid.Column="0" Margin="20, 0, 0, 0" Background="Transparent">
+                                            <Expander.Header>
+                                                <TextBlock Style="{StaticResource BaseElementsTextBlocks}" Text="Показать\Скрыть"/>
+                                            </Expander.Header>
+                                            <ListBox ItemsSource="{Binding OutputMessages}" Style="{StaticResource BaseListBox}">
+                                                <ListBox.ItemContainerStyle>
+                                                    <Style TargetType="ListBoxItem">
+                                                        <Setter Property="Template">
+                                                            <Setter.Value>
+                                                                <ControlTemplate TargetType="ListBoxItem">
+                                                                    <Border
+                                                         Background="{TemplateBinding Background}"
+                                                         BorderBrush="{TemplateBinding BorderBrush}"
+                                                         BorderThickness="{TemplateBinding BorderThickness}"
+                                                         CornerRadius="{StaticResource ListBoxItemsContainersRoundingAngle}">
+                                                                        <ContentPresenter/>
+                                                                    </Border>
+                                                                </ControlTemplate>
+                                                            </Setter.Value>
+                                                        </Setter>
+                                                    </Style>
+                                                </ListBox.ItemContainerStyle>
+                                                <ListBox.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <TextBlock Margin="0, 3, 0, 0" Style="{StaticResource BaseNotificationsTextBlocks}" Text="{Binding}"/>
+                                                    </DataTemplate>
+                                                </ListBox.ItemTemplate>
+                                            </ListBox>
+                                        </Expander>
                                     </Grid>
-
-
-                                    <ListBox Margin="20, 10, 20, 5"
-                                                 ItemsSource="{Binding OutputMessages}"
-                                                 Background="{StaticResource BaseBlocksBackgroundBrush}">
-
-                                        <ListBox.ItemContainerStyle>
-                                            <Style TargetType="ListBoxItem">
-                                                <Setter Property="Margin" Value="0, 3, 0, 0"/>
-                                            </Style>
-                                        </ListBox.ItemContainerStyle>
-
-                                        <ListBox.Resources>
-                                            <Style TargetType="ListBox" BasedOn="{StaticResource BaseListBox}">
-                                                <Setter Property="Template">
-                                                    <Setter.Value>
-                                                        <ControlTemplate TargetType="ListBox">
-                                                            <Border Background="{TemplateBinding Background}"
-                                                                        BorderBrush="{TemplateBinding BorderBrush}"
-                                                                        BorderThickness="{TemplateBinding BorderThickness}"
-                                                                        CornerRadius="{StaticResource ListBoxItemsContainersRoundingAngle}">
-                                                                <ScrollViewer Focusable="False"
-                                                                        Padding="{TemplateBinding Padding}">
-                                                                    <ItemsPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
-                                                                </ScrollViewer>
-                                                            </Border>
-                                                        </ControlTemplate>
-                                                    </Setter.Value>
-                                                </Setter>
-                                            </Style>
-                                        </ListBox.Resources>
-
-                                        <ListBox.ItemTemplate>
-                                            <DataTemplate>
-                                                <TextBlock Text="{Binding}" 
-                                                           Style="{StaticResource BaseElementsTextBlocks}"
-                                                      Foreground="{StaticResource BaseFontBrush}"
-                                                      FontSize="12"/>
-                                            </DataTemplate>
-                                        </ListBox.ItemTemplate>
-
-                                    </ListBox>
-
-                                    <Button Command="{Binding StopScriptCommand}"
-                                            Style="{StaticResource BaseRoundedButton}"
-                                            Margin="20, 5, 20, 20"
-                                            Background="{StaticResource CloseButtonBrush}"
-                                            MinHeight="40">
-
-                                        <TextBlock Text="Закрыть" 
-                                                   Style="{StaticResource BaseElementsTextBlocks}"
-                                                   Foreground="{StaticResource BaseBlocksBackgroundBrush}"/>
+                                    <Button
+                                 MinHeight="40"
+                                 Margin="20, 5, 20, 20"
+                                 Command="{Binding StopScriptCommand}"
+                                 Style="{StaticResource DoButtonStyle}">
+                                        <TextBlock Foreground="{StaticResource BaseBlocksBackgroundBrush}" Style="{StaticResource BaseElementsTextBlocks}" Text="Закрыть"/>
                                     </Button>
-
                                 </StackPanel>
                             </DataTemplate>
                         </ListBox.ItemTemplate>
                     </ListBox>
-
+                    
+                    <StackPanel VerticalAlignment="Center" Visibility="{Binding RunningScripts.Count, Converter={x:Static conv:CollectionCountToVisibilityConverter.Instance}}">
+                        <Image Width="200" Height="200" Source="{StaticResource waitingListImage}"/>
+                        <TextBlock
+                     Margin="0, 5"
+                     Style="{StaticResource BaseElementsTextBlocks}"
+                     Text="Запустите какой-либо скрипт..."
+                     TextAlignment="Center"/>
+                    </StackPanel>
+                    
                 </DockPanel>
             </Border>
-
-            <UniformGrid Grid.Row="1" 
-                         Rows="1"
-                         Margin="0,5,0,0">
-                <Button 
-                                    Margin="0, 5, 5, 5"
-                                    Background="{StaticResource BaseBlocksBackgroundBrush}"
-                                    Command="{Binding StartScriptsCommand}"
-                        Style="{StaticResource BaseRoundedButton}">
-                    <TextBlock Text="Запустить" Style="{StaticResource BaseElementsTextBlocks}"/>
+            
+            <UniformGrid Grid.Row="1" Margin="0,5,0,0" Rows="1">
+                <Button Margin="0, 5, 5, 5" Command="{Binding StartScriptsCommand}" Style="{StaticResource DoButtonStyle}">
+                    <TextBlock Style="{StaticResource BaseTitlesTextBlocks}" Text="Запустить"/>
                 </Button>
-                <Button 
-                                    Margin="5,5,0,5"
-                        Style="{StaticResource BaseRoundedButton}"
-                        Background="{StaticResource BaseBlocksBackgroundBrush}"
-                                    Command="{Binding StopScriptsCommand}">
-                    <TextBlock Text="Остановить" Style="{StaticResource BaseElementsTextBlocks}"/>
+                <Button Margin="5,5,0,5" Command="{Binding StopScriptsCommand}" Style="{StaticResource UndoButtonStyle}">
+                    <TextBlock Style="{StaticResource BaseTitlesTextBlocks}" Text="Остановить"/>
                 </Button>
             </UniformGrid>
+            
         </Grid>
 
     </Grid>

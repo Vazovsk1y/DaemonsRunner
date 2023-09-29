@@ -2,8 +2,8 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
 
-    <SolidColorBrush x:Key="BaseWindowBackgroundBrush">#EEEFEF</SolidColorBrush>
-    <Color x:Key="BaseWindowBackgroundColor">#EEEFEF</Color>
+    <SolidColorBrush x:Key="BaseWindowBackgroundBrush">#ededed</SolidColorBrush>
+    <Color x:Key="BaseWindowBackgroundColor">#ededed</Color>
 
     <SolidColorBrush x:Key="BaseBlocksBackgroundBrush">#FFFFFF</SolidColorBrush>
     <Color x:Key="BaseBlocksBackgroundColor">#FFFFFF</Color>
@@ -11,13 +11,10 @@
     <SolidColorBrush x:Key="BaseFontBrush">#0C0C0C</SolidColorBrush>
     <Color x:Key="BaseFontColor">#0C0C0C</Color>
 
-    <SolidColorBrush x:Key="BaseNONActiveElementsBrush">#FFE3E3</SolidColorBrush>
-    <Color x:Key="BaseNONActiveElementsColor">#FFE3E3</Color>
+    <SolidColorBrush x:Key="BaseNONActiveElementsBrush">#ececec</SolidColorBrush>
+    <Color x:Key="BaseNONActiveElementsColor">#ececec</Color>
 
-    <SolidColorBrush x:Key="TextInsideBlocksBrush">#AF0808</SolidColorBrush>
-    <Color x:Key="TextInsideBlocksColor">#FFE3E3</Color>
-
-    <SolidColorBrush x:Key="CloseButtonBrush">#FF7474</SolidColorBrush>
-    <Color x:Key="CloseButtonColor">#FFE3E3</Color>
+    <SolidColorBrush x:Key="SelectedElementBrush">#0C0C0C</SolidColorBrush>
+    <Color x:Key="SelectedElementColor">#0C0C0C</Color>
 
 </ResourceDictionary>

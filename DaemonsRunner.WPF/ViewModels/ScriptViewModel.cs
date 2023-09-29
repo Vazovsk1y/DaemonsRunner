@@ -16,5 +16,7 @@ internal partial class ScriptViewModel : ObservableObject
 	[ObservableProperty]
 	private string _command = null!;
 
+	public bool IsExecutableFileContains => ExecutableFileViewModel is not null;
+
 	public ExecutableFileViewModel? ExecutableFileViewModel { get; init; }
 }

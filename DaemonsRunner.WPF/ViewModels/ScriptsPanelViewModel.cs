@@ -36,13 +36,14 @@ internal partial class ScriptsPanelViewModel : ObservableRecipient
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(RemoveScriptCommand))]
+	[NotifyCanExecuteChangedFor(nameof(StartScriptsCommand))]
 	private ScriptViewModel? _selectedScript;
 
 	public bool? IsStartButtonEnable
     {
         get
         {
-            bool defaultCondition = Scripts.Count > 0 &&
+            bool defaultCondition = Scripts.Where(e => e.IsSelected).Any() &&
                   RunningScripts.Count == 0;
 
             return _isStartButtonEnable is bool condition
@@ -101,6 +102,8 @@ internal partial class ScriptsPanelViewModel : ObservableRecipient
 		{
 			StartScriptsCommand.NotifyCanExecuteChanged();
 			StopScriptsCommand.NotifyCanExecuteChanged();
+			RemoveScriptCommand.NotifyCanExecuteChanged();
+			AddScriptCommand.NotifyCanExecuteChanged();
 		};
 
 		_dataBus = dataBus;
@@ -116,24 +119,34 @@ internal partial class ScriptsPanelViewModel : ObservableRecipient
 
 	#region --Commands--
 
-	[RelayCommand]
+	[RelayCommand(CanExecute = nameof(CanAddScript))]
 	private void AddScript() => _scriptAddDialog.ShowDialog();
+
+	private bool CanAddScript() => RunningScripts.Count == 0;
 
 	[RelayCommand(CanExecute = nameof(CanRemoveScript))]
     private async Task RemoveScript()
     {
+		if (RemoveScriptCommand.IsRunning)
+		{
+			return;
+		}
+
         using var scope = _serviceScopeFactory.CreateScope();
         var service = scope.ServiceProvider.GetRequiredService<IScriptService>();
-        var response = await service.DeleteAsync(SelectedScript!.ScriptId);
 
-		if (response.OperationStatus is StatusCode.Success)
+		foreach (var script in Scripts.Where(e => e.IsSelected).ToList())
 		{
-			await App.Current.Dispatcher.InvokeAsync(() => Scripts.Remove(SelectedScript));
+			var response = await service.DeleteAsync(SelectedScript!.ScriptId);
+			if (response.OperationStatus is StatusCode.Success)
+			{
+				await App.Current.Dispatcher.InvokeAsync(() => Scripts.Remove(SelectedScript));
+			}
+			_dataBus.Send(response.Description);
 		}
-		_dataBus.Send(response.Description);
-    }
+	}
 
-    private bool CanRemoveScript() => SelectedScript is not null;
+    private bool CanRemoveScript() => SelectedScript is not null && RunningScripts.Count == 0;
 
     [RelayCommand(CanExecute = nameof(OnCanStartScripts))]
     private async Task StartScripts()
