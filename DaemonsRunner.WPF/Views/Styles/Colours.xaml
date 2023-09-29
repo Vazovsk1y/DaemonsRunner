@@ -11,8 +11,8 @@
     <SolidColorBrush x:Key="BaseFontBrush">#0C0C0C</SolidColorBrush>
     <Color x:Key="BaseFontColor">#0C0C0C</Color>
 
-    <SolidColorBrush x:Key="BaseNONActiveElementsBrush">#FFE3E3</SolidColorBrush>
-    <Color x:Key="BaseNONActiveElementsColor">#FFE3E3</Color>
+    <SolidColorBrush x:Key="BaseNONActiveElementsBrush">#ececec</SolidColorBrush>
+    <Color x:Key="BaseNONActiveElementsColor">#ececec</Color>
 
     <SolidColorBrush x:Key="SelectedElementBrush">#0C0C0C</SolidColorBrush>
     <Color x:Key="SelectedElementColor">#0C0C0C</Color>

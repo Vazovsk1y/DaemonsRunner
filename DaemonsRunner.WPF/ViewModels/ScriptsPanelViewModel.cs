@@ -103,6 +103,7 @@ internal partial class ScriptsPanelViewModel : ObservableRecipient
 			StartScriptsCommand.NotifyCanExecuteChanged();
 			StopScriptsCommand.NotifyCanExecuteChanged();
 			RemoveScriptCommand.NotifyCanExecuteChanged();
+			AddScriptCommand.NotifyCanExecuteChanged();
 		};
 
 		_dataBus = dataBus;
@@ -118,8 +119,10 @@ internal partial class ScriptsPanelViewModel : ObservableRecipient
 
 	#region --Commands--
 
-	[RelayCommand]
+	[RelayCommand(CanExecute = nameof(CanAddScript))]
 	private void AddScript() => _scriptAddDialog.ShowDialog();
+
+	private bool CanAddScript() => RunningScripts.Count == 0;
 
 	[RelayCommand(CanExecute = nameof(CanRemoveScript))]
     private async Task RemoveScript()

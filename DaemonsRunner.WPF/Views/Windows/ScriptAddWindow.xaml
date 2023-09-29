@@ -8,6 +8,9 @@
    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
    Width="400"
    Height="400"
+    MaxHeight="400"
+    MaxWidth="400"
+    WindowStartupLocation="CenterScreen"
    d:DataContext="{d:DesignInstance Type=viewmodels:ScriptAddViewModel}"
    Title="ScriptAddWindow"
    mc:Ignorable="d">
