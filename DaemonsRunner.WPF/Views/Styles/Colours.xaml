@@ -1,0 +1,20 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+
+    <SolidColorBrush x:Key="BaseWindowBackgroundBrush">#ededed</SolidColorBrush>
+    <Color x:Key="BaseWindowBackgroundColor">#ededed</Color>
+
+    <SolidColorBrush x:Key="BaseBlocksBackgroundBrush">#FFFFFF</SolidColorBrush>
+    <Color x:Key="BaseBlocksBackgroundColor">#FFFFFF</Color>
+
+    <SolidColorBrush x:Key="BaseFontBrush">#0C0C0C</SolidColorBrush>
+    <Color x:Key="BaseFontColor">#0C0C0C</Color>
+
+    <SolidColorBrush x:Key="BaseNONActiveElementsBrush">#ececec</SolidColorBrush>
+    <Color x:Key="BaseNONActiveElementsColor">#ececec</Color>
+
+    <SolidColorBrush x:Key="SelectedElementBrush">#0C0C0C</SolidColorBrush>
+    <Color x:Key="SelectedElementColor">#0C0C0C</Color>
+
+</ResourceDictionary>

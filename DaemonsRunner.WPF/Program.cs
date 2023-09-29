@@ -1,47 +1,72 @@
-﻿using DaemonsRunner.DAL.Storage;
+﻿using DaemonsRunner.WPF.Infrastructure.Extensions;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 using System;
 using System.IO;
 using System.Threading;
-using System.Xml.Linq;
 
-namespace DaemonsRunner
+namespace DaemonsRunner;
+
+internal class Program
 {
-    internal class Program
-    {
-        [STAThread]
-        public static void Main(string[] args)
-        {
-            App app = new();
-            if (app.IsNewAppProcessInstance())
-            {
-                EventWaitHandle eventWaitHandle = new(false, EventResetMode.AutoReset, App.Name);
-                app.Exit += (sender, args) => eventWaitHandle.Close();
+	public static bool IsInDebug { get; private set; }
 
-                app.Run();
-            }
-        }
+	private static Mutex? _mutex;
 
-        public static IHostBuilder CreateHostBuilder(string[] args) => Host
-            .CreateDefaultBuilder(args)
-            .UseSerilog((host, loggingConfiguration) =>
-            {
-                string appDataPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-                string appName = AppDomain.CurrentDomain.FriendlyName;
-                string logFileDirectoryPath = Path.Combine(appDataPath, appName);
-                string logFileName = "log.txt";
-                string logFileFullPath = Path.Combine(logFileDirectoryPath, logFileName);
+	[STAThread]
+	public static void Main(string[] args)
+	{
+		_mutex = new Mutex(true, App.Name, out bool createdNew);
+		if (!createdNew)
+		{
+			return;
+		}
 
-                loggingConfiguration.MinimumLevel.Information();
+
 #if DEBUG
-                loggingConfiguration.WriteTo.Debug();
-#else
-                loggingConfiguration.WriteTo.File(logFileFullPath, rollingInterval: RollingInterval.Day);
+		IsInDebug = true;
 #endif
-            })
-            .UseContentRoot(App.CurrentDirectory)
-            .ConfigureServices(App.ConfigureServices)
-            ;
-    }
+
+		App app = new();
+		app.StartGlobalExceptionsHandling();
+		app.InitializeComponent();
+		app.Run();
+	}
+
+	public static IHostBuilder CreateHostBuilder(string[] args)
+	{
+		Environment.SetEnvironmentVariable("DOTNET_ENVIRONMENT", IsInDebug ? "Development" : "Production");
+
+		return Host
+		.CreateDefaultBuilder(args)
+		.CreateAssociatedFolder()
+		.ConfigureAppConfiguration((a, e) =>
+		{
+			a.HostingEnvironment.ContentRootPath = App.WorkingDirectory;
+			a.HostingEnvironment.ApplicationName = App.Name;
+		})
+		.UseSerilog((host, loggingConfiguration) =>
+		{
+			string logFileName = "log.txt";
+			string logDirectory = Path.Combine(App.AssociatedFolderInAppDataPath, "logs");
+			if (!Directory.Exists(logDirectory))
+			{
+				Directory.CreateDirectory(logDirectory);
+			}
+
+			string logFileFullPath = Path.Combine(logDirectory, logFileName);
+			loggingConfiguration.MinimumLevel.Information();
+
+			if (host.HostingEnvironment.IsDevelopment())
+			{
+				loggingConfiguration.WriteTo.Debug();
+			}
+			else
+			{
+				loggingConfiguration.WriteTo.File(logFileFullPath, rollingInterval: RollingInterval.Day);
+			}
+		})
+		.ConfigureServices(App.ConfigureServices)
+		;
+	}
 }

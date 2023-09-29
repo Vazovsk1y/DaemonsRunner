@@ -1,14 +1,21 @@
-﻿using DaemonsRunner.BuisnessLayer.Responses.Enums;
-using DaemonsRunner.BuisnessLayer.Responses.Interfaces;
+﻿namespace DaemonsRunner.BuisnessLayer.Responses;
 
-namespace DaemonsRunner.BuisnessLayer.Responses
+public record DataResponse<T> : Response
 {
-    public class DataResponse<T> : IDataResponse<T>
-    {
-        public T? Data { get; set; }
+	private readonly T? _data;
+	public T Data
+	{
+		get
+		{
+			if (OperationStatus == StatusCode.Fail)
+			{
+				throw new InvalidOperationException("Cannot acessed data from failed response.");
+			}
 
-        public string Description { get; set; }
+			return _data!;
+		}
+	}
 
-        public StatusCode OperationStatus { get; set; }
-    }
+	internal DataResponse(T? data, string description, StatusCode operationStatus) : base(description, operationStatus) => _data = data;
 }
+

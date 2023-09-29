@@ -1,12 +1,5 @@
-﻿using DaemonsRunner.ViewModels.Interfaces;
+﻿using DaemonsRunner.ViewModels;
 
-namespace DaemonsRunner.Infrastructure.Messages
-{
-    internal enum ExitType
-    {
-        ByTaskManager,
-        ByAppInfrastructure
-    }
+namespace DaemonsRunner.Infrastructure.Messages;
 
-    internal record ScriptExitedMessage(IScriptExecutorViewModel Sender, ExitType ExitType);
-}
+internal record ScriptExitedMessage(ScriptExecutorViewModel Sender, bool ExitedByTaskManager = false);
