@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using DaemonsRunner.Domain.Models;
+using DaemonsRunner.Core.Models;
+using System.IO;
 
 namespace DaemonsRunner.WPF.ViewModels;
 
@@ -16,7 +17,7 @@ internal partial class ScriptViewModel : ObservableObject
 	[ObservableProperty]
 	private string _command = null!;
 
-	public bool IsExecutableFileContains => ExecutableFileViewModel is not null;
+	public bool IsWorkingDirectoryExists => WorkingDirectory is { Exists: true };
 
-	public ExecutableFileViewModel? ExecutableFileViewModel { get; init; }
+	public DirectoryInfo? WorkingDirectory { get; init; }
 }

@@ -1,7 +1,7 @@
 ﻿using DaemonsRunner.DAL.DataModels;
 using DaemonsRunner.DAL.Extensions;
 using DaemonsRunner.DAL.Repositories.Interfaces;
-using DaemonsRunner.Domain.Models;
+using DaemonsRunner.Core.Models;
 using Newtonsoft.Json;
 
 namespace DaemonsRunner.DAL.Repositories;

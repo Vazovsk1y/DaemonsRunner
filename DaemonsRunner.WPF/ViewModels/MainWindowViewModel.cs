@@ -1,6 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 
-namespace DaemonsRunner.ViewModels;
+namespace DaemonsRunner.WPF.ViewModels;
 
 internal partial class MainWindowViewModel : ObservableObject
 {

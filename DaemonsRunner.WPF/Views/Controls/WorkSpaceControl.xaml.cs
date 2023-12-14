@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace DaemonsRunner.Views.Controls
+namespace DaemonsRunner.WPF.Views.Controls
 {
     /// <summary>
     /// Interaction logic for WorkSpaceControl.xaml

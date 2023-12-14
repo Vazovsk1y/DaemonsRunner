@@ -1,8 +1,15 @@
-﻿using DaemonsRunner.BuisnessLayer.Services.Interfaces;
+﻿using DaemonsRunner.Application.Services.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 using System.Windows;
 
 namespace DaemonsRunner.Services;
+
+public interface IUserDialog<T>
+{
+	void ShowDialog();
+
+	void CloseDialog();
+}
 
 public class BaseUserDialogService<T> : IUserDialog<T> where T : Window
 {

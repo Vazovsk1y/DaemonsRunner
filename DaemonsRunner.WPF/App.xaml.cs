@@ -1,8 +1,9 @@
-﻿using DaemonsRunner.BuisnessLayer.Extensions;
+﻿using DaemonsRunner.Application.Extensions;
 using DaemonsRunner.DAL;
 using DaemonsRunner.DAL.Extensions;
 using DaemonsRunner.Infrastructure.Extensions;
 using DaemonsRunner.WPF;
+using DaemonsRunner.WPF.Views.Windows;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -17,7 +18,7 @@ namespace DaemonsRunner;
 /// <summary>
 /// Interaction logic for App.xaml
 /// </summary>
-public partial class App : Application
+public partial class App : System.Windows.Application
 {
 	#region --Fields--
 

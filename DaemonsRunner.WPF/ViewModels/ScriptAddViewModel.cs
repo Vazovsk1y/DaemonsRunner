@@ -1,19 +1,21 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using DaemonsRunner.BuisnessLayer.Responses;
-using DaemonsRunner.BuisnessLayer.Services.Interfaces;
+using DaemonsRunner.Application.Responses;
+using DaemonsRunner.Application.Services.Interfaces;
 using DaemonsRunner.Infrastructure.Messages;
-using DaemonsRunner.ServiceLayer.Responses.DTOs;
+using DaemonsRunner.Application.Responses.DTOs;
 using DaemonsRunner.WPF.Views.Windows;
 using System.IO;
 using System.Threading.Tasks;
+using DaemonsRunner.Services;
+using DaemonsRunner.Core.Enums;
 
 namespace DaemonsRunner.WPF.ViewModels;
 
 internal partial class ScriptAddViewModel : ObservableObject
 {
 	private readonly IDataBus _dataBus;
-	private readonly IFileDialog _fileDialog;
+	private readonly IFileManager _fileDialog;
 	private readonly IScriptService _scriptService;
 	private readonly IUserDialog<ScriptAddWindow> _scriptAddDialog;
 
@@ -26,15 +28,22 @@ internal partial class ScriptAddViewModel : ObservableObject
 	private string _scriptCommand = string.Empty;
 
 	[ObservableProperty]
-	[NotifyPropertyChangedFor(nameof(ExecutableFileName))]
-	private FileInfo? _executableFile;
+	[NotifyPropertyChangedFor(nameof(WorkingDirectoryName))]
+	private DirectoryInfo? _workingDirectory;
 
-	public string? ExecutableFileName => ExecutableFile?.Name ?? "*Имя исполняемого файла*";
+	[ObservableProperty]
+	[NotifyCanExecuteChangedFor(nameof(AcceptCommand))]
+	[NotifyPropertyChangedFor(nameof(RuntimeType))]
+	private bool _isPowershell;
+
+	public RuntimeType RuntimeType => IsPowershell ? RuntimeType.Powershell : RuntimeType.Cmd;
+
+	public string? WorkingDirectoryName => WorkingDirectory?.Name ?? "*Имя исполняемого файла*";
 
 	public ScriptAddViewModel(
 		IUserDialog<ScriptAddWindow> scriptAddDialog,
 		IDataBus dataBus,
-		IFileDialog fileDialog,
+		IFileManager fileDialog,
 		IScriptService scriptService)
 	{
 		_scriptAddDialog = scriptAddDialog;
@@ -46,7 +55,7 @@ internal partial class ScriptAddViewModel : ObservableObject
 	[RelayCommand(CanExecute = nameof(OnCanAccept))]
 	private async Task Accept()
 	{
-		var dto = new ScriptAddDTO(ScriptTitle, ScriptCommand, ExecutableFile?.FullName);
+		var dto = new ScriptAddDTO(ScriptTitle, ScriptCommand, RuntimeType, WorkingDirectory?.FullName);
 		var response = await _scriptService.SaveAsync(dto);
 		if (response.OperationStatus is StatusCode.Success)
 		{
@@ -55,12 +64,7 @@ internal partial class ScriptAddViewModel : ObservableObject
 				ScriptId = response.Data,
 				Command = dto.Command,
 				Title = dto.Title,
-				ExecutableFileViewModel = ExecutableFile is null ? null : new ExecutableFileViewModel
-				{
-					Path = ExecutableFile.FullName,
-					Name = ExecutableFile.Name,
-					Extension = ExecutableFile.Extension
-				}
+				WorkingDirectory = WorkingDirectory,
 			}));
 		}
 
@@ -70,19 +74,21 @@ internal partial class ScriptAddViewModel : ObservableObject
 
 	private bool OnCanAccept()
 	{
-		return !string.IsNullOrWhiteSpace(ScriptTitle) && !string.IsNullOrWhiteSpace(ScriptCommand);
+		return !string.IsNullOrWhiteSpace(ScriptTitle) 
+			&& !string.IsNullOrWhiteSpace(ScriptCommand)
+			&& WorkingDirectory is not { Exists: false };
 	}
 
 	[RelayCommand]
 	private void Cancel() => _scriptAddDialog.CloseDialog();
 
 	[RelayCommand]
-	private void SelectFile()
+	private void SelectFolder()
 	{
-		var response = _fileDialog.SelectFile();
+		var response = _fileDialog.SelectFolder();
 		if (response.OperationStatus is StatusCode.Success)
 		{
-			ExecutableFile = response.Data;
+			WorkingDirectory = response.Data;
 		}
 	}
 }

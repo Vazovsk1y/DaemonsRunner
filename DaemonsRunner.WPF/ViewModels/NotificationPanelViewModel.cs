@@ -1,12 +1,12 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using DaemonsRunner.BuisnessLayer.Services.Interfaces;
+using DaemonsRunner.Application.Services.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 
-namespace DaemonsRunner.ViewModels;
+namespace DaemonsRunner.WPF.ViewModels;
 
 internal partial class NotificationPanelViewModel : ObservableObject
 {

@@ -21,6 +21,7 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="0">
             <TextBlock
@@ -51,16 +52,22 @@
             Style="{StaticResource dialogTextBox}"
             Text="{Binding ScriptCommand, UpdateSourceTrigger=PropertyChanged}"/>
         </StackPanel>
+
         <StackPanel Grid.Row="3">
-            <TextBlock Style="{StaticResource BaseElementsTextBlocks}" Text="{Binding ExecutableFileName}" TextAlignment="Center"/>
+            <TextBlock Margin="30,5,0,0" Style="{StaticResource BaseElementsTextBlocks}" Text="{Binding RuntimeType, StringFormat='Среда выполнения: {0}'}" />
+            <CheckBox  Margin="30, 5, 0, 0" Content="Powershell" IsChecked="{Binding IsPowershell}"/>
+        </StackPanel>
+
+        <StackPanel Grid.Row="4">
+            <TextBlock Style="{StaticResource BaseElementsTextBlocks}" Text="{Binding WorkingDirectory.FullName}" TextAlignment="Justify"/>
             <Button
             MinHeight="20"
             Margin="30, 5, 30, 0"
-            Command="{Binding SelectFileCommand}"
-            Content="Выбрать исполняемый файл"
+            Command="{Binding SelectFolderCommand}"
+            Content="Выбрать рабочий каталог"
             Style="{StaticResource DoButtonStyle}"/>
         </StackPanel>
-        <Grid Grid.Row="4">
+        <Grid Grid.Row="5">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>

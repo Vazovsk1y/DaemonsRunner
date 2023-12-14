@@ -10,7 +10,9 @@ public class ScriptJsonModel
 
     public string command { get; set; } = null!;
 
-    public string? executable_file_path { get; set; }
+    public string? working_directory_path { get; set; }
+
+    public string runtime_type { get; set; } = null!;
 
 #pragma warning restore IDE1006 // Naming Styles
 }

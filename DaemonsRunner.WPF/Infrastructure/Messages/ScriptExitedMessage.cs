@@ -1,5 +1,5 @@
-﻿using DaemonsRunner.ViewModels;
+﻿using DaemonsRunner.WPF.ViewModels;
 
-namespace DaemonsRunner.Infrastructure.Messages;
+namespace DaemonsRunner.WPF.Infrastructure.Messages;
 
 internal record ScriptExitedMessage(ScriptExecutorViewModel Sender, bool ExitedByTaskManager = false);

@@ -1,4 +1,4 @@
-﻿using DaemonsRunner.Domain.Models;
+﻿using DaemonsRunner.Core.Models;
 
 namespace DaemonsRunner.DAL.Repositories.Interfaces;
 

@@ -1,17 +1,17 @@
-﻿using Microsoft.Win32;
-using DaemonsRunner.BuisnessLayer.Services.Interfaces;
+﻿using DaemonsRunner.Application.Services.Interfaces;
 using System.Collections.Generic;
 using System.Linq;
-using DaemonsRunner.BuisnessLayer.Responses;
+using DaemonsRunner.Application.Responses;
 using System.IO;
+using System.Windows.Forms;
 
 namespace DaemonsRunner.Services;
 
-public class WPFFileDialogService : IFileDialog
+public class WPFFileDialogService : IFileManager
 {
     public DataResponse<FileInfo> SelectFile(string filter = "", string title = "Choose file:")
     {
-        var fileDialog = new OpenFileDialog
+        var fileDialog = new Microsoft.Win32.OpenFileDialog
         {
             Multiselect = false,
             Filter = filter,
@@ -31,7 +31,7 @@ public class WPFFileDialogService : IFileDialog
 
     public DataResponse<IEnumerable<FileInfo>> SelectFiles(string filter = "", string title = "Choose files:")
     {
-        var fileDialog = new OpenFileDialog
+        var fileDialog = new Microsoft.Win32.OpenFileDialog
         {
             Multiselect = true,
             Filter = filter,
@@ -49,4 +49,22 @@ public class WPFFileDialogService : IFileDialog
 
         return Response.Fail<IEnumerable<FileInfo>>("No files were selected.");
     }
+
+	public DataResponse<DirectoryInfo> SelectFolder(string title = "Choose folder:")
+	{
+		using var folderBrowserDialog = new FolderBrowserDialog()
+		{
+			ShowNewFolderButton = false,
+			Description = title,
+            UseDescriptionForTitle = true,
+		};
+
+		var dialogResult = folderBrowserDialog.ShowDialog();
+		if (dialogResult is DialogResult.OK)
+		{
+			return Response.Success(new DirectoryInfo(folderBrowserDialog.SelectedPath));
+		}
+
+		return Response.Fail<DirectoryInfo>("No directory was selected.");
+	}
 }

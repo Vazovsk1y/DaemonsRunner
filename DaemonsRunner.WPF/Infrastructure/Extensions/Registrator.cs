@@ -1,10 +1,9 @@
-﻿using DaemonsRunner.BuisnessLayer.Services.Interfaces;
+﻿using DaemonsRunner.Application.Services.Interfaces;
 using DaemonsRunner.DAL;
 using DaemonsRunner.Services;
-using DaemonsRunner.ViewModels;
-using DaemonsRunner.ViewModels.Interfaces;
 using DaemonsRunner.WPF;
 using DaemonsRunner.WPF.ViewModels;
+using DaemonsRunner.WPF.ViewModels.Interfaces;
 using DaemonsRunner.WPF.Views.Windows;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -17,7 +16,7 @@ internal static class Registrator
         .AddSingleton<MainWindowViewModel>()
         .AddSingleton<ScriptsPanelViewModel>()
         .AddSingleton<NotificationPanelViewModel>()
-        .AddTransient<IFileDialog, WPFFileDialogService>()
+        .AddTransient<IFileManager, WPFFileDialogService>()
         .AddSingleton<IStorage, Storage>(e => new Storage(App.AssociatedFolderInAppDataPath))
         .AddScoped<ScriptAddViewModel>()
         .AddSingleton(typeof(IUserDialog<>), typeof(BaseUserDialogService<>))

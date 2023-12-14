@@ -1,8 +1,8 @@
-﻿using DaemonsRunner.BuisnessLayer.Services.Interfaces;
-using DaemonsRunner.Domain.Models;
-using DaemonsRunner.ViewModels.Interfaces;
+﻿using DaemonsRunner.Application.Services.Interfaces;
+using DaemonsRunner.Core.Models;
+using DaemonsRunner.WPF.ViewModels.Interfaces;
 
-namespace DaemonsRunner.ViewModels;
+namespace DaemonsRunner.WPF.ViewModels;
 
 internal class ScriptExecutorViewModelFactory : IScriptExecutorViewModelFactory
 {

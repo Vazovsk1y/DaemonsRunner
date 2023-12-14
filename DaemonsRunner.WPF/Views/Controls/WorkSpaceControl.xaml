@@ -1,10 +1,10 @@
 ﻿<UserControl
-   x:Class="DaemonsRunner.Views.Controls.WorkSpaceControl"
+   x:Class="DaemonsRunner.WPF.Views.Controls.WorkSpaceControl"
    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
    xmlns:conv="clr-namespace:DaemonsRunner.WPF.Infrastructure.Converters"
    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-   xmlns:viewmodels="clr-namespace:DaemonsRunner.ViewModels"
+   xmlns:viewmodels="clr-namespace:DaemonsRunner.WPF.ViewModels"
    xmlns:vms="clr-namespace:DaemonsRunner.WPF.ViewModels"
    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
    Background="Transparent"
@@ -121,16 +121,9 @@
                                             <TextBlock Style="{StaticResource BaseNotificationsTextBlocks}" Text="Команда: "/>
                                             <TextBlock Style="{StaticResource BaseNotificationsTextBlocks}" Text="{Binding Command}"/>
                                         </StackPanel>
-                                        <StackPanel Margin="0, 5, 0, 0" Orientation="Vertical" Visibility="{Binding ExecutableFileViewModel, Converter={x:Static conv:NullToVisibilityConverter.Instance}}">
-                                            <TextBlock Style="{StaticResource BaseNotificationsTextBlocks}" Text="Исполняемый файл: "/>
-                                            <StackPanel Orientation="Horizontal" Margin="5, 0, 0, 0">
-                                                <TextBlock Style="{StaticResource BaseNotificationsTextBlocks}" Text="Имя: "/>
-                                                <TextBlock Style="{StaticResource BaseNotificationsTextBlocks}" Text="{Binding ExecutableFileViewModel.Name}"/>
-                                            </StackPanel>
-                                            <StackPanel Orientation="Horizontal" Margin="5, 0, 0, 0">
-                                                <TextBlock Style="{StaticResource BaseNotificationsTextBlocks}" Text="Путь: "/>
-                                                <TextBlock Style="{StaticResource BaseNotificationsTextBlocks}" Text="{Binding ExecutableFileViewModel.Path}"/>
-                                            </StackPanel>
+                                        <StackPanel Margin="0, 5, 0, 0" Orientation="Horizontal" Visibility="{Binding WorkingDirectory, Converter={x:Static conv:NullToVisibilityConverter.Instance}}">
+                                            <TextBlock Style="{StaticResource BaseNotificationsTextBlocks}" Text="Рабочий каталог: "/>
+                                            <TextBlock Style="{StaticResource BaseNotificationsTextBlocks}" Text="{Binding WorkingDirectory.FullName}"/>
                                         </StackPanel>
                                     </StackPanel>
                                 </DockPanel>

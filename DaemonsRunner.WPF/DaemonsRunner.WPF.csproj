@@ -6,6 +6,7 @@
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
     <StartupObject>DaemonsRunner.Program</StartupObject>
+	<UseWindowsForms>true</UseWindowsForms>
 
 	<RuntimeIdentifier>win-x64</RuntimeIdentifier>
 	<IncludeAllContentForSelfExtract>true</IncludeAllContentForSelfExtract>
@@ -37,7 +38,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DaemonsRunner.ServiceLayer\DaemonsRunner.ServiceLayer.csproj" />
+    <ProjectReference Include="..\DaemonsRunner.Application\DaemonsRunner.Application.csproj" />
   </ItemGroup>
   
 </Project>

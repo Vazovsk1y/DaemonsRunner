@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
-using DaemonsRunner.BuisnessLayer.Services.Interfaces;
-using DaemonsRunner.Infrastructure.Messages;
+using DaemonsRunner.Application.Services.Interfaces;
 using System.Windows.Input;
-using DaemonsRunner.Domain.Models;
+using DaemonsRunner.Core.Models;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using DaemonsRunner.WPF.Infrastructure.Messages;
 
-namespace DaemonsRunner.ViewModels;
+namespace DaemonsRunner.WPF.ViewModels;
 
 internal partial class ScriptExecutorViewModel : ObservableObject, IDisposable
 {
@@ -24,7 +24,7 @@ internal partial class ScriptExecutorViewModel : ObservableObject, IDisposable
 
 	public ObservableCollection<string> OutputMessages { get; } = new ObservableCollection<string>();
 
-    public string Title => _scriptExecutor.Title;
+    public string Title => $"Executable script [{_scriptExecutor.ExecutableScript.Title}].";
 
     #endregion
 

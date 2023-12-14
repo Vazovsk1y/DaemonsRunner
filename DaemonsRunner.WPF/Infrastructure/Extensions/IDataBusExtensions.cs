@@ -1,4 +1,4 @@
-﻿using DaemonsRunner.BuisnessLayer.Services.Interfaces;
+﻿using DaemonsRunner.Application.Services.Interfaces;
 using System.Collections.Generic;
 
 namespace DaemonsRunner.Infrastructure.Extensions;

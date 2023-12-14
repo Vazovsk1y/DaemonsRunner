@@ -1,11 +1,12 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using DaemonsRunner.BuisnessLayer.Responses;
-using DaemonsRunner.BuisnessLayer.Services.Interfaces;
+using DaemonsRunner.Application.Responses;
+using DaemonsRunner.Application.Services.Interfaces;
 using DaemonsRunner.Infrastructure.Messages;
-using DaemonsRunner.ViewModels.Interfaces;
+using DaemonsRunner.Services;
 using DaemonsRunner.WPF.Infrastructure.Extensions;
-using DaemonsRunner.WPF.ViewModels;
+using DaemonsRunner.WPF.Infrastructure.Messages;
+using DaemonsRunner.WPF.ViewModels.Interfaces;
 using DaemonsRunner.WPF.Views.Windows;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -14,7 +15,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace DaemonsRunner.ViewModels;
+namespace DaemonsRunner.WPF.ViewModels;
 
 internal partial class ScriptsPanelViewModel : ObservableRecipient
 {
