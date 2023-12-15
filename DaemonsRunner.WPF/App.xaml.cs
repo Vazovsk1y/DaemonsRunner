@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
@@ -68,21 +69,23 @@ public partial class App : System.Windows.Application
 		DispatcherUnhandledException += (sender, e) =>
 		{
 			var logger = Services.GetRequiredService<ILogger<App>>();
-			logger.LogError(e.Exception, "Something went wrong in [{nameofDispatcherUnhandledException}]", nameof(DispatcherUnhandledException));
+			logger.LogError(e.Exception, "Something went wrong in [{DispatcherUnhandledException}]", nameof(DispatcherUnhandledException));
 			e.Handled = true;
-			Current?.Shutdown();
+			Environment.Exit(-1);
 		};
 
 		AppDomain.CurrentDomain.UnhandledException += (sender, e) =>
 		{
 			var logger = Services.GetRequiredService<ILogger<App>>();
-			logger.LogError(e.ExceptionObject as Exception, "Something went wrong in [{nameofCurrentDomainUnhandledException}].", nameof(AppDomain.CurrentDomain.UnhandledException));
+			logger.LogError(e.ExceptionObject as Exception, "Something went wrong in [{CurrentDomainUnhandledException}].", nameof(AppDomain.CurrentDomain.UnhandledException));
+			Environment.Exit(-1);
 		};
 
 		TaskScheduler.UnobservedTaskException += (sender, e) =>
 		{
 			var logger = Services.GetRequiredService<ILogger<App>>();
 			logger.LogError(e.Exception, "Something went wrong in [{UnobservedTaskException}].", nameof(TaskScheduler.UnobservedTaskException));
+			Environment.Exit(-1);
 		};
 	}
 

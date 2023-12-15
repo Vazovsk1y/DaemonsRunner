@@ -9,9 +9,9 @@ public class ScriptExecutor : IDisposable
 {
     #region --Events--
 
-    public event EventHandler? ExitedByTaskManager;
+    public event EventHandler<EventArgs>? ExitedByTaskManager;
 
-    public event Func<object, string, Task>? OutputMessageReceived;
+    public event Func<ScriptExecutor, string, Task>? OutputMessageReceived;
 
     #endregion
 
@@ -176,23 +176,20 @@ public class ScriptExecutor : IDisposable
     public void Dispose() => CleanUp();
 #pragma warning restore CA1816 // Dispose methods should call SuppressFinalize
 
-    #endregion
+	#endregion
 
-    #region --EventHandlers--
+	#region --EventHandlers--
 
-    private async void OnProcessOutputDataReceived(object sender, DataReceivedEventArgs e)
-    {
-        const string cmdEndcodingMessage = "Active code page: 65001";
-        if (!string.IsNullOrEmpty(e.Data) && e.Data != cmdEndcodingMessage)
-        {
-            if (OutputMessageReceived is not null)
-            {
-                await OutputMessageReceived.Invoke(this, e.Data);
-            }
-        }
-    }
+	private void OnProcessOutputDataReceived(object sender, DataReceivedEventArgs e)
+	{
+		const string cmdEndcodingMessage = "Active code page: 65001";
+		if (!string.IsNullOrWhiteSpace(e.Data) && e.Data != cmdEndcodingMessage)
+		{
+			OutputMessageReceived?.Invoke(this, e.Data);
+		}
+	}
 
-    private void OnProcessExited(object? sender, EventArgs e)
+	private void OnProcessExited(object? sender, EventArgs e)
     {
         if (!_isClosedByTaskManager)
         {
@@ -257,4 +254,3 @@ public class ScriptExecutor : IDisposable
 
 	#endregion
 }
-

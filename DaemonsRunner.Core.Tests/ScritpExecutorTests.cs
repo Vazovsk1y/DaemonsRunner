@@ -1,14 +1,13 @@
 ﻿using DaemonsRunner.Core.Enums;
 using DaemonsRunner.Core.Exceptions.Base;
 using DaemonsRunner.Core.Models;
-using DaemonsRunner.Core.Tests.Infrastructure.EventSpies;
 
 namespace DaemonsRunner.Core.Tests;
 
 public class ScritpExecutorTests
 {
     [Fact]
-    public void IS_Object_Disposed_Exception_Thrown_on_disposed_object_propertiesUsing()
+    public void IS_Object_Disposed_Exception_Thrown_on_disposed_object_whenPropertiesUsing()
     {
         using var testObject = CreateTestExecutor();
 
@@ -20,7 +19,7 @@ public class ScritpExecutorTests
     }
 
     [Fact]
-    public void IS_Object_Disposed_Exception_Thrown_on_disposed_object_methodsUsing()
+    public void IS_Object_Disposed_Exception_Thrown_on_disposed_object_whenMethodsUsing()
     {
         using var testObject = CreateTestExecutor();
 
@@ -34,7 +33,7 @@ public class ScritpExecutorTests
     }
 
     [Fact]
-    public void IS_Starting_Correct()
+    public void IS_Starting_correct()
     {
         bool expected = true;
         using var testObject = CreateTestExecutor();
@@ -42,17 +41,43 @@ public class ScritpExecutorTests
         testObject.Start();
 
         Assert.Equal(expected, testObject.IsRunning);
+        Assert.False(testObject.IsMessagesReceiving);
     }
 
-    [Fact]
+	[Fact]
+	public void IS_Stopping_correct()
+	{
+		bool expected = false;
+		using var testObject = CreateTestExecutor();
+
+		testObject.Start();
+		testObject.Stop();
+
+		Assert.Equal(expected, testObject.IsRunning);
+        Assert.False(testObject.IsMessagesReceiving);
+	}
+
+	[Fact]
+	public void IS_Messages_Receiving_Starting_correct()
+	{
+		bool expected = true;
+		using var testExecutor = CreateTestExecutor();
+
+		testExecutor.Start();
+		testExecutor.StartMessagesReceiving();
+
+		Assert.Equal(expected, testExecutor.IsMessagesReceiving);
+	}
+
+	[Fact]
     public void Is_Multiply_Start_Method_Calling_doesnt_raise_exceptions()
     {
         using var testExecutor = CreateTestExecutor();
 
         testExecutor.Start();
-        testExecutor.Start();
-        testExecutor.Start();
-        testExecutor.Start();
+		testExecutor.Start();
+		testExecutor.Start();
+		testExecutor.Start();
     }
 
     [Fact]
@@ -69,19 +94,7 @@ public class ScritpExecutorTests
     }
 
     [Fact]
-    public void IS_Stopping_Correct()
-    {
-        bool expected = false;
-        using var testObject = CreateTestExecutor();
-
-        testObject.Start();
-        testObject.Stop();
-
-        Assert.Equal(expected, testObject.IsRunning);
-    }
-
-    [Fact]
-    public void Is_Messages_Receiving_Breaks_when_Stop_method_called()
+    public void Is_Messages_Receiving_Breaks_when_stop_method_called()
     {
         using var testExecutor = CreateTestExecutor();
 
@@ -91,18 +104,6 @@ public class ScritpExecutorTests
 
         Assert.False(testExecutor.IsRunning);
         Assert.False(testExecutor.IsMessagesReceiving);
-    }
-
-    [Fact]
-    public void IS_Messages_Receiving_Starting_Correct()
-    {
-        bool expected = true;
-        using var testExecutor = CreateTestExecutor();
-
-        testExecutor.Start();
-        testExecutor.StartMessagesReceiving();
-
-        Assert.Equal(expected, testExecutor.IsMessagesReceiving);
     }
 
     [Fact]
@@ -122,20 +123,22 @@ public class ScritpExecutorTests
     }
 
     [Fact]
-    public async Task IS_Executor_Exited_By_Task_Manager_Event_NOT_Raised_when_executor_killed_by_TaskManager()
-    {
-        using var testExecutor = CreateTestExecutor();
-        var eventSpy = new ExecutorExitedByTaskManagerEventSpy();
-        testExecutor.ExitedByTaskManager += eventSpy.HandleEvent;
+	public void IS_Executor_Exited_By_Task_Manager_Event_NOT_Raised_when_executor_stopped_by_calling_stop_method()
+	{
+        bool expected = false;
+		bool actual = false;
+		using var testExecutor = CreateTestExecutor();
 
-        testExecutor.Start();
+		testExecutor.Start();
+        testExecutor.ExitedByTaskManager += (_, _) => actual = true;
         testExecutor.Stop();
-        await Task.Delay(BaseEventSpy.EventWaitTimeMs);
 
-        Assert.False(eventSpy.EventHandled);
-    }
+		Assert.False(testExecutor.IsRunning);
+        Assert.Equal(expected, actual);
+		testExecutor.ExitedByTaskManager -= (_, _) => actual = true;
+	}
 
-    [Theory]
+	[Theory]
     [InlineData(2)]
     [InlineData(5)]
     [InlineData(10)]
