@@ -1,5 +1,7 @@
-﻿using DaemonsRunner.Core.Exceptions.Base;
+﻿using DaemonsRunner.Core.Enums;
+using DaemonsRunner.Core.Exceptions.Base;
 using System.Diagnostics;
+using System.Text;
 
 namespace DaemonsRunner.Core.Models;
 
@@ -92,7 +94,7 @@ public class ScriptExecutor : IDisposable
             return;
         }
 
-        _executableProcess = ConfigureExecutableProcess();
+        _executableProcess = ConfigureExecutableProcess(_executableScript.RuntimeType);
         _executableProcess.Exited += OnProcessExited;
         bool startingResult = _executableProcess.Start();
         if (!startingResult)
@@ -221,23 +223,28 @@ public class ScriptExecutor : IDisposable
 		_isDisposed = true;
     }
 
-    private Process ConfigureExecutableProcess()
+    private Process ConfigureExecutableProcess(RuntimeType runtimeType)
     {
-        return new Process
+        var processStartInfo = new ProcessStartInfo
         {
-            StartInfo = new ProcessStartInfo
-            {
-                FileName = "cmd",
-                Arguments = "/k chcp 65001",      // set UTF8 endcoding to cmd output.
-                RedirectStandardInput = true,
-                RedirectStandardOutput = true,
-                RedirectStandardError = true,
-                UseShellExecute = false,
-                WorkingDirectory = _workingDirectory,
-                CreateNoWindow = true,
-            },
-            EnableRaisingEvents = true,
-        };
+            FileName = runtimeType == RuntimeType.Cmd ? "cmd" : "powershell",
+            Arguments = runtimeType == 
+            RuntimeType.Cmd ? "/k chcp 65001" : "-NoExit $OutputEncoding=[Console]::InputEncoding=[Console]::OutputEncoding=New-Object System.Text.UTF8Encoding $false",      // set UTF8 endcoding to cmd/powershell output.
+			RedirectStandardInput = true,
+			RedirectStandardOutput = true,
+			RedirectStandardError = true,
+			UseShellExecute = false,
+			WorkingDirectory = _workingDirectory,
+			CreateNoWindow = true,
+		};
+
+        if (runtimeType == RuntimeType.Powershell)
+        {
+            processStartInfo.StandardOutputEncoding = Encoding.UTF8;
+            processStartInfo.StandardErrorEncoding = Encoding.UTF8;
+        }
+
+        return new Process { StartInfo = processStartInfo, EnableRaisingEvents = true };
     }
 
     private void ThrownExceptionIfDisposed() => ObjectDisposedException.ThrowIf(_isDisposed, this);

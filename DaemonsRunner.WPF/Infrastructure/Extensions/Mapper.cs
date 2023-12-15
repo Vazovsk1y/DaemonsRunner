@@ -13,6 +13,7 @@ internal static class Mapper
 			Title = scriptDTO.Title,
 			Command = scriptDTO.Command,
 			WorkingDirectory = string.IsNullOrWhiteSpace(scriptDTO.WorkingDirectoryPath) ? null : new System.IO.DirectoryInfo(scriptDTO.WorkingDirectoryPath),
+			RuntimeType = scriptDTO.RuntimeType,
 		};
 	}
 }

@@ -13,7 +13,7 @@ public class Script : Entity<ScriptId>
 
     public required RuntimeType RuntimeType { get; set; }
 
-    public Script() { }
+    public Script() : base() { }
 
     // for mapper
     private Script(ScriptId scriptId, string title, string command, RuntimeType runtimeType) : base(scriptId) 

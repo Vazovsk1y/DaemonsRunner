@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using DaemonsRunner.Core.Enums;
 using DaemonsRunner.Core.Models;
 using System.IO;
 
@@ -17,7 +18,7 @@ internal partial class ScriptViewModel : ObservableObject
 	[ObservableProperty]
 	private string _command = null!;
 
-	public bool IsWorkingDirectoryExists => WorkingDirectory is { Exists: true };
+	public RuntimeType RuntimeType { get; init; }
 
 	public DirectoryInfo? WorkingDirectory { get; init; }
 }

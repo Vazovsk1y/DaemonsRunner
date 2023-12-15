@@ -65,6 +65,7 @@ internal partial class ScriptAddViewModel : ObservableObject
 				Command = dto.Command,
 				Title = dto.Title,
 				WorkingDirectory = WorkingDirectory,
+				RuntimeType = RuntimeType,
 			}));
 		}
 

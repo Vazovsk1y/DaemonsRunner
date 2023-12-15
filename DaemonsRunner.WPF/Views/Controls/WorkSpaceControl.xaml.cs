@@ -24,5 +24,5 @@ namespace DaemonsRunner.WPF.Views.Controls
         {
             InitializeComponent();
         }
-    }
+	}
 }

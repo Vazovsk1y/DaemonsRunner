@@ -12,6 +12,7 @@ internal static class Mapper
 			script.Id,
 			script.Title,
 			script.Command,
+			script.RuntimeType,
 			script.WorkingDirectory?.Path
 		);
 	}

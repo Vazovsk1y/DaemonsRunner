@@ -121,7 +121,11 @@
                                             <TextBlock Style="{StaticResource BaseNotificationsTextBlocks}" Text="Команда: "/>
                                             <TextBlock Style="{StaticResource BaseNotificationsTextBlocks}" Text="{Binding Command}"/>
                                         </StackPanel>
-                                        <StackPanel Margin="0, 5, 0, 0" Orientation="Horizontal" Visibility="{Binding WorkingDirectory, Converter={x:Static conv:NullToVisibilityConverter.Instance}}">
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Style="{StaticResource BaseNotificationsTextBlocks}" Text="Среда исполнения: "/>
+                                            <TextBlock Style="{StaticResource BaseNotificationsTextBlocks}" Text="{Binding RuntimeType}"/>
+                                        </StackPanel>
+                                        <StackPanel Orientation="Horizontal" Visibility="{Binding WorkingDirectory, Converter={x:Static conv:NullToVisibilityConverter.Instance}}">
                                             <TextBlock Style="{StaticResource BaseNotificationsTextBlocks}" Text="Рабочий каталог: "/>
                                             <TextBlock Style="{StaticResource BaseNotificationsTextBlocks}" Text="{Binding WorkingDirectory.FullName}"/>
                                         </StackPanel>
