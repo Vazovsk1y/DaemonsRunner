@@ -7,7 +7,7 @@ namespace DaemonsRunner.DAL.Extensions;
 
 public static class Mapper
 {
-    public static Script ToModel(this ScriptJsonModel model)
+    public static Script ToDomainModel(this ScriptJsonModel jsonModel)
     {
         var scriptType = typeof(Script);
         var ctor = scriptType.GetConstructor(BindingFlags.NonPublic | BindingFlags.Instance, null, new[] { typeof(ScriptId), typeof(string), typeof(string), typeof(RuntimeType) }, null);
@@ -17,8 +17,8 @@ public static class Mapper
             throw new InvalidOperationException("Unable to find suitable private ctor for creating script.");
         }
 
-        var script = (Script)ctor.Invoke(new object[] { new ScriptId(model.id), model.title, model.command, Enum.Parse<RuntimeType>(model.runtime_type) });
-        script.WorkingDirectory = string.IsNullOrWhiteSpace(model.working_directory_path) ? null : new WorkingDirectory { Path = model.working_directory_path };
+        var script = (Script)ctor.Invoke(new object[] { new ScriptId(jsonModel.id), jsonModel.title, jsonModel.command, Enum.Parse<RuntimeType>(jsonModel.runtime_type) });
+        script.WorkingDirectory = string.IsNullOrWhiteSpace(jsonModel.working_directory_path) ? null : new WorkingDirectory { Path = jsonModel.working_directory_path };
         return script;
 	}
 

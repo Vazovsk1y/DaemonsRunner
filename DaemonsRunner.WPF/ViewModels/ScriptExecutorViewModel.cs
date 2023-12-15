@@ -24,7 +24,7 @@ internal partial class ScriptExecutorViewModel : ObservableObject, IDisposable
 
 	public ObservableCollection<string> OutputMessages { get; } = new ObservableCollection<string>();
 
-    public string Title => $"Executable script [{_scriptExecutor.ExecutableScript.Title}].";
+    public string Title => $"Исполняемый скрипт [{_scriptExecutor.ExecutableScript.Title}].";
 
     #endregion
 

@@ -6,7 +6,7 @@ namespace DaemonsRunner.Application.Extensions;
 
 public static class Registrator
 {
-    public static IServiceCollection AddBuisnessLayer(this IServiceCollection services) => services
+    public static IServiceCollection AddApplicationLayer(this IServiceCollection services) => services
         .AddSingleton<IDataBus, DataBusService>()
         .AddScoped<IScriptService, ScriptService>()
         ;

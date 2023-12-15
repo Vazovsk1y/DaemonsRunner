@@ -15,9 +15,9 @@ internal static class Registrator
         .AddSingleton<IScriptExecutorViewModelFactory, ScriptExecutorViewModelFactory>()
         .AddSingleton<MainWindowViewModel>()
         .AddSingleton<ScriptsPanelViewModel>()
-        .AddSingleton<NotificationPanelViewModel>()
-        .AddTransient<IFileManager, WPFFileDialogService>()
-        .AddSingleton<IStorage, Storage>(e => new Storage(App.AssociatedFolderInAppDataPath))
+        .AddSingleton<NotificationsPanelViewModel>()
+        .AddTransient<IFileManager, WPFFileManagerService>()
+        .AddSingleton<IStorage, Storage>(e => new Storage(App.AssociatedFolderPath))
         .AddScoped<ScriptAddViewModel>()
         .AddSingleton(typeof(IUserDialog<>), typeof(BaseUserDialogService<>))
         .AddSingleton(s =>

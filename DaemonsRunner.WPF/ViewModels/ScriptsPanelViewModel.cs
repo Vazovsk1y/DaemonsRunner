@@ -165,9 +165,9 @@ internal partial class ScriptsPanelViewModel : ObservableRecipient
 
 		await Task.Run(async () =>
 		{
-			foreach (var script in scriptsToStart)
+			foreach (var scriptId in scriptsToStart)
 			{
-				var startingResponse = await service.StartAsync(script).ConfigureAwait(false);
+				var startingResponse = await service.StartAsync(new StartScriptOptions(scriptId)).ConfigureAwait(false);
 				if (startingResponse.OperationStatus is StatusCode.Success)
 				{
 					var executorViewModel = _scriptExecutorViewModelFactory.CreateViewModel(startingResponse.Data!);

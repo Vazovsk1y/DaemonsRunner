@@ -12,9 +12,7 @@ public interface IScriptService
 
 	Task<Response> DeleteAsync(ScriptId scriptId, CancellationToken cancellationToken = default);
 
-	Task<DataResponse<ScriptExecutor>> StartAsync(
-		ScriptId scriptId,
-		bool startMessagesReceiving = true,
-		bool executeCommand = true,
-		CancellationToken cancellationToken = default);
+	Task<DataResponse<ScriptExecutor>> StartAsync(StartScriptOptions startScriptOptions, CancellationToken cancellationToken = default);
 }
+
+public record StartScriptOptions(ScriptId ScriptId, bool StartMessagesReceiving = true, bool ExecuteCommand = true);

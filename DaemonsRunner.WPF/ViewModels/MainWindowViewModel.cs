@@ -13,7 +13,7 @@ internal partial class MainWindowViewModel : ObservableObject
 
 	public ScriptsPanelViewModel ScriptsPanelViewModel { get; }
 
-	public NotificationPanelViewModel NotificationPanelViewModel { get; }
+	public NotificationsPanelViewModel NotificationsPanelViewModel { get; }
 
 	[ObservableProperty]
 	private string _windowTitle = App.Name;
@@ -29,10 +29,10 @@ internal partial class MainWindowViewModel : ObservableObject
 
 	public MainWindowViewModel(
 		ScriptsPanelViewModel workSpaceViewModel,
-		NotificationPanelViewModel userNotificationViewModel)
+		NotificationsPanelViewModel notificationsPanelViewModel)
 	{
 		ScriptsPanelViewModel = workSpaceViewModel;
-		NotificationPanelViewModel = userNotificationViewModel;
+		NotificationsPanelViewModel = notificationsPanelViewModel;
 		ScriptsPanelViewModel.IsActive = true;
 	}
 

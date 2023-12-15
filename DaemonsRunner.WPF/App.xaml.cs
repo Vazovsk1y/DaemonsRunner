@@ -34,7 +34,7 @@ public partial class App : System.Windows.Application
 
 	public static string WorkingDirectory => IsDesignMode ? Path.GetDirectoryName(GetSourceCodePath())! : Environment.CurrentDirectory;
 
-	public static string AssociatedFolderInAppDataPath => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), CompanyName, Name);
+	public static string AssociatedFolderPath => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), CompanyName, Name);
 
 	public static bool IsDesignMode { get; private set; } = true;
 
@@ -55,15 +55,15 @@ public partial class App : System.Windows.Application
 	#region --Methods--
 
 	public static void ConfigureServices(HostBuilderContext host, IServiceCollection services) => services
-		.AddBuisnessLayer()
+		.AddApplicationLayer()
 		.AddDataAccessLayer()
 		.AddWPF()
 		;
 
-	private static string GetSourceCodePath([CallerFilePath] string path = null) => string.IsNullOrWhiteSpace(path)
+	private static string GetSourceCodePath([CallerFilePath] string? path = null) => string.IsNullOrWhiteSpace(path)
 		? throw new ArgumentNullException(nameof(path)) : path;
 
-	public void StartGlobalExceptionsHandling()
+	public void ConfigureGlobalExceptionsHandler()
 	{
 		DispatcherUnhandledException += (sender, e) =>
 		{
@@ -82,7 +82,7 @@ public partial class App : System.Windows.Application
 		TaskScheduler.UnobservedTaskException += (sender, e) =>
 		{
 			var logger = Services.GetRequiredService<ILogger<App>>();
-			logger.LogError(e.Exception, "Something went wrong in [{nameofCurrentDomainUnhandledException}].", nameof(TaskScheduler.UnobservedTaskException));
+			logger.LogError(e.Exception, "Something went wrong in [{UnobservedTaskException}].", nameof(TaskScheduler.UnobservedTaskException));
 		};
 	}
 

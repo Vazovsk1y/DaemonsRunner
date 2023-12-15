@@ -16,13 +16,13 @@ using System.Windows.Shapes;
 namespace DaemonsRunner.WPF.Views.Controls
 {
     /// <summary>
-    /// Interaction logic for NotificationPanelControl.xaml
+    /// Interaction logic for WorkSpaceControl.xaml
     /// </summary>
-    public partial class NotificationPanelControl : UserControl
+    public partial class ScriptsPanelControl : UserControl
     {
-        public NotificationPanelControl()
+        public ScriptsPanelControl()
         {
             InitializeComponent();
         }
-    }
+	}
 }

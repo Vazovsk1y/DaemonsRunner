@@ -7,7 +7,7 @@ using System.Windows.Forms;
 
 namespace DaemonsRunner.Services;
 
-public class WPFFileDialogService : IFileManager
+public class WPFFileManagerService : IFileManager
 {
     public DataResponse<FileInfo> SelectFile(string filter = "", string title = "Choose file:")
     {

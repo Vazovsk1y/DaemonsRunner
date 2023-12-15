@@ -8,7 +8,7 @@ using System.Windows.Input;
 
 namespace DaemonsRunner.WPF.ViewModels;
 
-internal partial class NotificationPanelViewModel : ObservableObject
+internal partial class NotificationsPanelViewModel : ObservableObject
 {
 	#region --Fields--
 
@@ -26,9 +26,9 @@ internal partial class NotificationPanelViewModel : ObservableObject
 
 	#region --Constructors--
 
-	public NotificationPanelViewModel() { }
+	public NotificationsPanelViewModel() { }
 
-	public NotificationPanelViewModel(IDataBus dataBus)
+	public NotificationsPanelViewModel(IDataBus dataBus)
 	{
 		_dataBus = dataBus;
 		_subscriptions.Add(_dataBus.RegisterHandler<string>(OnMessageReceived));

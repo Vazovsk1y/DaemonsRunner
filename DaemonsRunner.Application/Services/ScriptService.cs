@@ -53,12 +53,9 @@ public class ScriptService : IScriptService
 		return Task.FromResult(Response.Success(script.Id));
 	}
 
-	public Task<DataResponse<ScriptExecutor>> StartAsync(ScriptId scriptId, 
-		bool startMessagesReceiving = true, 
-		bool executeCommand = true, 
-		CancellationToken cancellationToken = default)
+	public Task<DataResponse<ScriptExecutor>> StartAsync(StartScriptOptions startScriptOptions, CancellationToken cancellationToken = default)
 	{
-		var scriptToExecute = _scriptRepository.GetAll().FirstOrDefault(e => e.Id == scriptId);
+		var scriptToExecute = _scriptRepository.GetAll().FirstOrDefault(e => e.Id == startScriptOptions.ScriptId);
 		if (scriptToExecute is null)
 		{
 			return Task.FromResult(Response.Fail<ScriptExecutor>("Script with passed id is not exists."));
@@ -71,11 +68,11 @@ public class ScriptService : IScriptService
 
 		var executor = ScriptExecutor.Create(scriptToExecute);
 		executor.Start();
-		if (startMessagesReceiving)
+		if (startScriptOptions.StartMessagesReceiving)
 		{
 			executor.StartMessagesReceiving();
 		}
-		if (executeCommand)
+		if (startScriptOptions.ExecuteCommand)
 		{
 			executor.ExecuteCommand();
 		}

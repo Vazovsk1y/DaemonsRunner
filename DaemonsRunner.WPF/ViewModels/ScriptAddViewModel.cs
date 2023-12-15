@@ -15,7 +15,7 @@ namespace DaemonsRunner.WPF.ViewModels;
 internal partial class ScriptAddViewModel : ObservableObject
 {
 	private readonly IDataBus _dataBus;
-	private readonly IFileManager _fileDialog;
+	private readonly IFileManager _fileManager;
 	private readonly IScriptService _scriptService;
 	private readonly IUserDialog<ScriptAddWindow> _scriptAddDialog;
 
@@ -32,23 +32,22 @@ internal partial class ScriptAddViewModel : ObservableObject
 	private DirectoryInfo? _workingDirectory;
 
 	[ObservableProperty]
-	[NotifyCanExecuteChangedFor(nameof(AcceptCommand))]
 	[NotifyPropertyChangedFor(nameof(RuntimeType))]
 	private bool _isPowershell;
 
 	public RuntimeType RuntimeType => IsPowershell ? RuntimeType.Powershell : RuntimeType.Cmd;
 
-	public string? WorkingDirectoryName => WorkingDirectory?.Name ?? "*Имя исполняемого файла*";
+	public string? WorkingDirectoryName => WorkingDirectory?.Name ?? "*Название рабочего каталога*";
 
 	public ScriptAddViewModel(
 		IUserDialog<ScriptAddWindow> scriptAddDialog,
 		IDataBus dataBus,
-		IFileManager fileDialog,
+		IFileManager fileManager,
 		IScriptService scriptService)
 	{
 		_scriptAddDialog = scriptAddDialog;
 		_dataBus = dataBus;
-		_fileDialog = fileDialog;
+		_fileManager = fileManager;
 		_scriptService = scriptService;
 	}
 
@@ -86,7 +85,7 @@ internal partial class ScriptAddViewModel : ObservableObject
 	[RelayCommand]
 	private void SelectFolder()
 	{
-		var response = _fileDialog.SelectFolder();
+		var response = _fileManager.SelectFolder();
 		if (response.OperationStatus is StatusCode.Success)
 		{
 			WorkingDirectory = response.Data;

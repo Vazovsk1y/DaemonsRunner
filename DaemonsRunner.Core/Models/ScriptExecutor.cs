@@ -89,6 +89,7 @@ public class ScriptExecutor : IDisposable
     public void Start()
     {
         ThrownExceptionIfDisposed();
+
         if (IsRunning)
         {
             return;
@@ -128,6 +129,7 @@ public class ScriptExecutor : IDisposable
     public void ExecuteCommand()
     {
         ThrownExceptionIfDisposed();
+
         if (!IsRunning)
         {
             throw new DomainException($"{nameof(ScriptExecutor)} wasn't started. Unable execute command.");
@@ -140,6 +142,7 @@ public class ScriptExecutor : IDisposable
     public void Stop()
     {
         ThrownExceptionIfDisposed();
+
         if (!IsRunning)
         {
             return;
@@ -156,6 +159,7 @@ public class ScriptExecutor : IDisposable
     public void StopMessagesReceiving()
     {
         ThrownExceptionIfDisposed();
+
         if (!IsMessagesReceiving || !IsRunning)
         {
             return;
