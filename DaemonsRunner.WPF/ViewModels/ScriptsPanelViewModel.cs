@@ -36,7 +36,7 @@ internal partial class ScriptsPanelViewModel : ObservableRecipient
     #region --Properties--
 
     [ObservableProperty]
-    [NotifyCanExecuteChangedFor(nameof(RemoveScriptCommand))]
+    [NotifyCanExecuteChangedFor(nameof(RemoveScriptsCommand))]
 	[NotifyCanExecuteChangedFor(nameof(StartScriptsCommand))]
 	private ScriptViewModel? _selectedScript;
 
@@ -44,7 +44,7 @@ internal partial class ScriptsPanelViewModel : ObservableRecipient
     {
         get
         {
-            bool defaultCondition = Scripts.Where(e => e.IsSelected).Any() &&
+            bool defaultCondition = SelectedScripts.Any() &&
                   RunningScripts.Count == 0;
 
             return _isStartButtonEnable is bool condition
@@ -78,6 +78,8 @@ internal partial class ScriptsPanelViewModel : ObservableRecipient
 
     public ObservableCollection<ScriptViewModel> Scripts => _scripts;
 
+	public IEnumerable<ScriptViewModel> SelectedScripts => Scripts.Where(e => e.IsSelected).ToList();
+
     #endregion
 
     #region --Constructors--
@@ -103,7 +105,7 @@ internal partial class ScriptsPanelViewModel : ObservableRecipient
 		{
 			StartScriptsCommand.NotifyCanExecuteChanged();
 			StopScriptsCommand.NotifyCanExecuteChanged();
-			RemoveScriptCommand.NotifyCanExecuteChanged();
+			RemoveScriptsCommand.NotifyCanExecuteChanged();
 			AddScriptCommand.NotifyCanExecuteChanged();
 		};
 
@@ -125,10 +127,10 @@ internal partial class ScriptsPanelViewModel : ObservableRecipient
 
 	private bool CanAddScript() => RunningScripts.Count == 0;
 
-	[RelayCommand(CanExecute = nameof(CanRemoveScript))]
-    private async Task RemoveScript()
+	[RelayCommand(CanExecute = nameof(CanRemoveScripts))]
+    private async Task RemoveScripts()
     {
-		if (RemoveScriptCommand.IsRunning)
+		if (RemoveScriptsCommand.IsRunning)
 		{
 			return;
 		}
@@ -136,18 +138,18 @@ internal partial class ScriptsPanelViewModel : ObservableRecipient
         using var scope = _serviceScopeFactory.CreateScope();
         var service = scope.ServiceProvider.GetRequiredService<IScriptService>();
 
-		foreach (var script in Scripts.Where(e => e.IsSelected).ToList())
+		foreach (var script in SelectedScripts)
 		{
-			var response = await service.DeleteAsync(SelectedScript!.ScriptId);
+			var response = await service.DeleteAsync(script.ScriptId);
 			if (response.OperationStatus is StatusCode.Success)
 			{
-				await App.Current.Dispatcher.InvokeAsync(() => Scripts.Remove(SelectedScript));
+				await App.Current.Dispatcher.InvokeAsync(() => Scripts.Remove(script));
 			}
 			_dataBus.Send(response.Description);
 		}
 	}
 
-    private bool CanRemoveScript() => SelectedScript is not null && RunningScripts.Count == 0;
+    private bool CanRemoveScripts() => SelectedScripts.Any() && RunningScripts.Count == 0;
 
     [RelayCommand(CanExecute = nameof(OnCanStartScripts))]
     private async Task StartScripts()
@@ -159,15 +161,14 @@ internal partial class ScriptsPanelViewModel : ObservableRecipient
 
 		IsStartButtonEnable = false;
 
-        var scriptsToStart = Scripts.Where(e => e.IsSelected).Select(e => e.ScriptId);
 		var scope = _serviceScopeFactory.CreateScope();
 		var service = scope.ServiceProvider.GetRequiredService<IScriptService>();
 
 		await Task.Run(async () =>
 		{
-			foreach (var scriptId in scriptsToStart)
+			foreach (var script in SelectedScripts)
 			{
-				var startingResponse = await service.StartAsync(new StartScriptOptions(scriptId)).ConfigureAwait(false);
+				var startingResponse = await service.StartAsync(new StartScriptOptions(script.ScriptId)).ConfigureAwait(false);
 				if (startingResponse.OperationStatus is StatusCode.Success)
 				{
 					var executorViewModel = _scriptExecutorViewModelFactory.CreateViewModel(startingResponse.Data!);
