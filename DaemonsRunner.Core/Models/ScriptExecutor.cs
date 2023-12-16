@@ -11,7 +11,7 @@ public class ScriptExecutor : IDisposable
 
     public event EventHandler<EventArgs>? ExitedByTaskManager;
 
-    public event Func<ScriptExecutor, string, Task>? OutputMessageReceived;
+    public event EventHandler<DataReceivedEventArgs>? OutputMessageReceived;
 
     #endregion
 
@@ -174,6 +174,7 @@ public class ScriptExecutor : IDisposable
 
 #pragma warning disable CA1816 // Dispose methods should call SuppressFinalize
     public void Dispose() => CleanUp();
+
 #pragma warning restore CA1816 // Dispose methods should call SuppressFinalize
 
 	#endregion
@@ -185,7 +186,7 @@ public class ScriptExecutor : IDisposable
 		const string cmdEndcodingMessage = "Active code page: 65001";
 		if (!string.IsNullOrWhiteSpace(e.Data) && e.Data != cmdEndcodingMessage)
 		{
-			OutputMessageReceived?.Invoke(this, e.Data);
+			OutputMessageReceived?.Invoke(this, e);
 		}
 	}
 

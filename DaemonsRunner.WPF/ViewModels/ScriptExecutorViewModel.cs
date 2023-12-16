@@ -7,6 +7,7 @@ using DaemonsRunner.Core.Models;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using DaemonsRunner.WPF.Infrastructure.Messages;
+using System.Diagnostics;
 
 namespace DaemonsRunner.WPF.ViewModels;
 
@@ -59,8 +60,8 @@ internal partial class ScriptExecutorViewModel : ObservableObject, IDisposable
 
     private void OnScriptExitedByTaskManager(object? sender, EventArgs e) => _dataBus.Send(new ScriptExitedMessage(this, true)); 
 
-    private async Task OnScriptOutputMessageReceived(object sender, string message) => 
-        await App.Current.Dispatcher.InvokeAsync(() => OutputMessages.Add($"[{DateTime.Now.ToShortTimeString()}]: {message!}"));
+    private async void OnScriptOutputMessageReceived(object? sender, DataReceivedEventArgs message) => 
+        await App.Current.Dispatcher.InvokeAsync(() => OutputMessages.Add($"[{DateTime.Now.ToShortTimeString()}]: {message.Data!}"));
 
     private async void CleanUp()
     {
