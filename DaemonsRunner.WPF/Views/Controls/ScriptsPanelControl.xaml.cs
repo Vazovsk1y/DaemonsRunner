@@ -13,16 +13,16 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace DaemonsRunner.WPF.Views.Windows
+namespace DaemonsRunner.WPF.Views.Controls
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for WorkSpaceControl.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class ScriptsPanelControl : UserControl
     {
-        public MainWindow()
+        public ScriptsPanelControl()
         {
             InitializeComponent();
         }
-    }
+	}
 }

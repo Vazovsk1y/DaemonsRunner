@@ -28,7 +28,7 @@ internal class Program
 #endif
 
 		App app = new();
-		app.StartGlobalExceptionsHandling();
+		app.ConfigureGlobalExceptionsHandler();
 		app.InitializeComponent();
 		app.Run();
 	}
@@ -39,16 +39,15 @@ internal class Program
 
 		return Host
 		.CreateDefaultBuilder(args)
-		.CreateAssociatedFolder()
+		.CreateApplicationAssociatedFolder()
 		.ConfigureAppConfiguration((a, e) =>
 		{
-			a.HostingEnvironment.ContentRootPath = App.WorkingDirectory;
 			a.HostingEnvironment.ApplicationName = App.Name;
 		})
 		.UseSerilog((host, loggingConfiguration) =>
 		{
 			string logFileName = "log.txt";
-			string logDirectory = Path.Combine(App.AssociatedFolderInAppDataPath, "logs");
+			string logDirectory = Path.Combine(App.AssociatedFolderPath, "logs");
 			if (!Directory.Exists(logDirectory))
 			{
 				Directory.CreateDirectory(logDirectory);

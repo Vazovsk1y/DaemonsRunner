@@ -13,14 +13,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace DaemonsRunner.WPF.Views.Windows
+namespace DaemonsRunner.WPF.Views.Controls
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for NotificationPanelControl.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class NotificationsPanelControl : UserControl
     {
-        public MainWindow()
+        public NotificationsPanelControl()
         {
             InitializeComponent();
         }

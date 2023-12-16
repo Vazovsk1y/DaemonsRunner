@@ -6,11 +6,13 @@ public class ScriptJsonModel
 
     public required Guid id { get; init; }
 
-    public string title { get; set; } = null!;
+    public required string title { get; set; }
 
-    public string command { get; set; } = null!;
+    public required string command { get; set; }
 
-    public string? executable_file_path { get; set; }
+    public string? working_directory_path { get; set; }
+
+    public required string runtime_type { get; set; }
 
 #pragma warning restore IDE1006 // Naming Styles
 }

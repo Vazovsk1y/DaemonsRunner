@@ -1,12 +1,14 @@
-﻿using DaemonsRunner.BuisnessLayer.Extensions;
+﻿using DaemonsRunner.Application.Extensions;
 using DaemonsRunner.DAL;
 using DaemonsRunner.DAL.Extensions;
 using DaemonsRunner.Infrastructure.Extensions;
 using DaemonsRunner.WPF;
+using DaemonsRunner.WPF.Views.Windows;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
@@ -17,7 +19,7 @@ namespace DaemonsRunner;
 /// <summary>
 /// Interaction logic for App.xaml
 /// </summary>
-public partial class App : Application
+public partial class App : System.Windows.Application
 {
 	#region --Fields--
 
@@ -33,7 +35,7 @@ public partial class App : Application
 
 	public static string WorkingDirectory => IsDesignMode ? Path.GetDirectoryName(GetSourceCodePath())! : Environment.CurrentDirectory;
 
-	public static string AssociatedFolderInAppDataPath => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), CompanyName, Name);
+	public static string AssociatedFolderPath => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), CompanyName, Name);
 
 	public static bool IsDesignMode { get; private set; } = true;
 
@@ -54,34 +56,36 @@ public partial class App : Application
 	#region --Methods--
 
 	public static void ConfigureServices(HostBuilderContext host, IServiceCollection services) => services
-		.AddBuisnessLayer()
+		.AddApplicationLayer()
 		.AddDataAccessLayer()
 		.AddWPF()
 		;
 
-	private static string GetSourceCodePath([CallerFilePath] string path = null) => string.IsNullOrWhiteSpace(path)
+	private static string GetSourceCodePath([CallerFilePath] string? path = null) => string.IsNullOrWhiteSpace(path)
 		? throw new ArgumentNullException(nameof(path)) : path;
 
-	public void StartGlobalExceptionsHandling()
+	public void ConfigureGlobalExceptionsHandler()
 	{
 		DispatcherUnhandledException += (sender, e) =>
 		{
 			var logger = Services.GetRequiredService<ILogger<App>>();
-			logger.LogError(e.Exception, "Something went wrong in [{nameofDispatcherUnhandledException}]", nameof(DispatcherUnhandledException));
+			logger.LogError(e.Exception, "Something went wrong in [{DispatcherUnhandledException}]", nameof(DispatcherUnhandledException));
 			e.Handled = true;
-			Current?.Shutdown();
+			Environment.Exit(-1);
 		};
 
 		AppDomain.CurrentDomain.UnhandledException += (sender, e) =>
 		{
 			var logger = Services.GetRequiredService<ILogger<App>>();
-			logger.LogError(e.ExceptionObject as Exception, "Something went wrong in [{nameofCurrentDomainUnhandledException}].", nameof(AppDomain.CurrentDomain.UnhandledException));
+			logger.LogError(e.ExceptionObject as Exception, "Something went wrong in [{CurrentDomainUnhandledException}].", nameof(AppDomain.CurrentDomain.UnhandledException));
+			Environment.Exit(-1);
 		};
 
 		TaskScheduler.UnobservedTaskException += (sender, e) =>
 		{
 			var logger = Services.GetRequiredService<ILogger<App>>();
-			logger.LogError(e.Exception, "Something went wrong in [{nameofCurrentDomainUnhandledException}].", nameof(TaskScheduler.UnobservedTaskException));
+			logger.LogError(e.Exception, "Something went wrong in [{UnobservedTaskException}].", nameof(TaskScheduler.UnobservedTaskException));
+			Environment.Exit(-1);
 		};
 	}
 

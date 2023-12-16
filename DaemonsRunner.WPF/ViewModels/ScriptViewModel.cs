@@ -1,22 +1,21 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using DaemonsRunner.Domain.Models;
+using DaemonsRunner.Core.Enums;
+using DaemonsRunner.Core.Models;
+using System.IO;
 
 namespace DaemonsRunner.WPF.ViewModels;
 
 internal partial class ScriptViewModel : ObservableObject
 {
+	[ObservableProperty]
+	private bool _isSelected;
 	public required ScriptId ScriptId { get; init; }
 
-	[ObservableProperty]
-	private bool _IsSelected;
+	public required string Title { get; init; }
 
-	[ObservableProperty]
-	private string _title = null!;
+	public required string Command { get; init; }
 
-	[ObservableProperty]
-	private string _command = null!;
+	public required RuntimeType RuntimeType { get; init; }
 
-	public bool IsExecutableFileContains => ExecutableFileViewModel is not null;
-
-	public ExecutableFileViewModel? ExecutableFileViewModel { get; init; }
+	public DirectoryInfo? WorkingDirectory { get; init; }
 }

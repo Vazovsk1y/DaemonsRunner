@@ -1,0 +1,92 @@
+﻿<UserControl
+   x:Class="DaemonsRunner.WPF.Views.Controls.NotificationsPanelControl"
+   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+   xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+   xmlns:local="clr-namespace:DaemonsRunner.WPF.Views.Controls"
+   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+   xmlns:viewmodels="clr-namespace:DaemonsRunner.WPF.ViewModels"
+   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+   d:DataContext="{d:DesignInstance Type=viewmodels:NotificationsPanelViewModel, IsDesignTimeCreatable=True}"
+   d:DesignHeight="450"
+   d:DesignWidth="400"
+   mc:Ignorable="d">
+    <UserControl.Resources>
+        <Style TargetType="ListBoxItem">
+            <Setter Property="Background" Value="{StaticResource BaseBlocksBackgroundBrush}"/>
+            <Setter Property="Margin" Value="5, 0, 4, 0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ListBoxItem">
+                        <Border
+                     Background="{TemplateBinding Background}"
+                     BorderBrush="{TemplateBinding BorderBrush}"
+                     BorderThickness="{TemplateBinding BorderThickness}"
+                     CornerRadius="{StaticResource ListBoxItemsContainersRoundingAngle}">
+                            <ContentPresenter/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+
+    <Expander ExpandDirection="Right">
+        <Expander.Header>
+            <TextBlock
+            HorizontalAlignment="Center"
+            Margin="10,5"
+            Style="{StaticResource BaseElementsTextBlocks}"
+            Text="Панель уведомлений">
+                <TextBlock.LayoutTransform>
+                    <RotateTransform Angle="90"/>
+                </TextBlock.LayoutTransform>
+            </TextBlock>
+        </Expander.Header>
+        <Grid Background="{StaticResource BaseBlocksBackgroundBrush}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="9*"/>
+                <RowDefinition Height="1*"/>
+            </Grid.RowDefinitions>
+            <DockPanel Grid.Row="0">
+                <TextBlock
+            HorizontalAlignment="Center"
+            Margin="10,5"
+            DockPanel.Dock="Top"
+            Style="{StaticResource BaseTitlesTextBlocks}"
+            Text="Уведомления"/>
+                <Rectangle
+            Height="3"
+            Margin="10,0,10,5"
+            DockPanel.Dock="Top"
+            Fill="Black">
+                    <Rectangle.RadiusX>2
+                    </Rectangle.RadiusX>
+                    <Rectangle.RadiusY>2
+                    </Rectangle.RadiusY>
+                </Rectangle>
+                <ListBox DockPanel.Dock="Top" ItemsSource="{Binding Notifications}">
+                    <ListBox.Style>
+                        <Style BasedOn="{StaticResource BaseListBox}" TargetType="ListBox"/>
+                    </ListBox.Style>
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock
+                     Foreground="{StaticResource BaseFontBrush}"
+                     Padding="5"
+                     Style="{StaticResource BaseNotificationsTextBlocks}"
+                     Text="{Binding}"/>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </DockPanel>
+            <Button
+         Grid.Row="1"
+         Margin="8"
+         Command="{Binding ClearNotificationsCommand}"
+         Style="{StaticResource DoButtonStyle}">
+                <TextBlock Style="{StaticResource BaseElementsTextBlocks}" Text="Очистить"/>
+            </Button>
+        </Grid>
+    </Expander>
+
+</UserControl>

@@ -6,17 +6,17 @@ namespace DaemonsRunner.WPF.Infrastructure.Extensions;
 
 internal static class IHostBuilderExtensions
 {
-	public static IHostBuilder CreateAssociatedFolder(this IHostBuilder hostBuilder)
+	public static IHostBuilder CreateApplicationAssociatedFolder(this IHostBuilder hostBuilder)
 	{
-		var companyDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), App.CompanyName);
-		if (!Directory.Exists(companyDirectory))
+		var companyFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), App.CompanyName);
+		if (!Directory.Exists(companyFolder))
 		{
-			Directory.CreateDirectory(companyDirectory);
+			Directory.CreateDirectory(companyFolder);
 		}
 
-		if (!Directory.Exists(App.AssociatedFolderInAppDataPath))
+		if (!Directory.Exists(App.AssociatedFolderPath))
 		{
-			Directory.CreateDirectory(App.AssociatedFolderInAppDataPath);
+			Directory.CreateDirectory(App.AssociatedFolderPath);
 		}
 
 		return hostBuilder;

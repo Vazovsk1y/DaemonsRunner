@@ -1,4 +1,5 @@
-﻿using DaemonsRunner.ServiceLayer.Responses.DTOs;
+﻿using DaemonsRunner.Application.Responses.DTOs;
+using DaemonsRunner.Core.Models;
 using DaemonsRunner.WPF.ViewModels;
 
 namespace DaemonsRunner.WPF.Infrastructure.Extensions;
@@ -12,17 +13,20 @@ internal static class Mapper
 			ScriptId = scriptDTO.Id,
 			Title = scriptDTO.Title,
 			Command = scriptDTO.Command,
-			ExecutableFileViewModel = scriptDTO.ExecutableFile?.ToViewModel(),
+			WorkingDirectory = string.IsNullOrWhiteSpace(scriptDTO.WorkingDirectoryPath) ? null : new System.IO.DirectoryInfo(scriptDTO.WorkingDirectoryPath),
+			RuntimeType = scriptDTO.RuntimeType,
 		};
 	}
 
-	public static ExecutableFileViewModel ToViewModel(this ExecutableFileDTO executableFileDTO)
+	public static ScriptViewModel ToViewModel(this ScriptAddDTO scriptAddDTO, ScriptId scriptId)
 	{
-		return new ExecutableFileViewModel
+		return new ScriptViewModel
 		{
-			Path = executableFileDTO.Path,
-			Extension = executableFileDTO.Extension,
-			Name = executableFileDTO.Name,
+			ScriptId = scriptId,
+			Title = scriptAddDTO.Title,
+			Command = scriptAddDTO.Command,
+			WorkingDirectory = string.IsNullOrWhiteSpace(scriptAddDTO.WorkingDirectoryPath) ? null : new System.IO.DirectoryInfo(scriptAddDTO.WorkingDirectoryPath),
+			RuntimeType = scriptAddDTO.RuntimeType,
 		};
 	}
 }

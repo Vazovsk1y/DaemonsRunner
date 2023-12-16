@@ -1,7 +1,7 @@
 ﻿using DaemonsRunner.DAL.DataModels;
 using DaemonsRunner.DAL.Extensions;
 using DaemonsRunner.DAL.Repositories.Interfaces;
-using DaemonsRunner.Domain.Models;
+using DaemonsRunner.Core.Models;
 using Newtonsoft.Json;
 
 namespace DaemonsRunner.DAL.Repositories;
@@ -42,7 +42,7 @@ public class ScriptRepository : IScriptRepository
 		{
 			using var reader = new StreamReader(_storageFilePath);
 			string json = reader.ReadToEnd();
-			return JsonConvert.DeserializeObject<IEnumerable<ScriptJsonModel>>(json)?.Select(e => e.ToModel()) ?? Enumerable.Empty<Script>();
+			return JsonConvert.DeserializeObject<IEnumerable<ScriptJsonModel>>(json)?.Select(e => e.ToDomainModel()) ?? Enumerable.Empty<Script>();
 		}
 	}
 

@@ -1,6 +1,6 @@
-﻿using DaemonsRunner.Domain.Models;
+﻿using DaemonsRunner.Core.Models;
 
-namespace DaemonsRunner.ViewModels.Interfaces;
+namespace DaemonsRunner.WPF.ViewModels.Interfaces;
 
 internal interface IScriptExecutorViewModelFactory
 {
